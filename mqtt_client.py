@@ -31,3 +31,5 @@ class MQTT_Client:
         except KeyboardInterrupt:
             print('Interrupted')
             self.client.disconnect()
+
+    def send_recorded_message(topic, wav_file):
