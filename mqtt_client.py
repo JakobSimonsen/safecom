@@ -13,6 +13,7 @@ class MQTT_Client:
     def on_message(self, client, userdata, msg):
         print('on_message(): topic: {}'.format(msg.topic))
         self.count = self.count + 1
+        self.stm_driver.send("new_incoming_msg", "coordinator")
         if self.count == 20:
             self.client.disconnect()
             print('disconnected after 20 messages')
@@ -24,7 +25,7 @@ class MQTT_Client:
         print('Connecting to {}:{}'.format(broker, port))
         self.client.connect(broker, port)
 
-        self.client.subscribe("#")
+        #self.client.subscribe("#")
         try:
             thread = Thread(target=self.client.loop_forever)
             thread.start()
