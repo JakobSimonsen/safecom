@@ -26,7 +26,7 @@ class MQTT_Client:
         # data['data'] - decode with b64decode
         # data['last_packet] --> bool
         
-
+        
         # Decode payload into json string
         decoded_string = msg.payload.decode('utf-8')
         js_str = js.loads(decoded_string)
