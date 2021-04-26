@@ -8,18 +8,26 @@ import wave
 
 class Recorder:
     def __init__(self):
+        print("init")
         self.recording = False
         self.chunk = 1024  # Record in chunks of 1024 samples
         self.sample_format = pyaudio.paInt16  # 16 bits per sample
         self.channels = 2
         self.fs = 44100  # Record at 44100 samples per second
-        self.filename = "output.wav"
+        #self.filename = "output.wav"
         self.p = pyaudio.PyAudio()
 
     def getCurrentTimeAsString(self):
         return datetime.utcnow().isoformat(sep=' ', timespec='milliseconds') #Use this to convert back: https://stackoverflow.com/questions/127803/how-do-i-parse-an-iso-8601-formatted-date/49784038#49784038
 
+    def createFileNameForAudioRecording(self):
+        rawTimeString = self.getCurrentTimeAsString()
+        formatedForFileNameString = rawTimeString.replace(":", "!") #Does not want to save files containing ':'
+        formatedForFileNameString = formatedForFileNameString+".wav"
+        return formatedForFileNameString
+
     def record(self):
+        print("recording")
         stream = self.p.open(format=self.sample_format,
                 channels=self.channels,
                 rate=self.fs,
@@ -45,7 +53,8 @@ class Recorder:
     def process(self):
         print("processing")
         # Save the recorded data as a WAV file
-        wf = wave.open(self.filename, 'wb')
+        filename = self.createFileNameForAudioRecording()
+        wf = wave.open(filename, 'wb')
         wf.setnchannels(self.channels)
         wf.setsampwidth(self.p.get_sample_size(self.sample_format))
         wf.setframerate(self.fs)
@@ -64,3 +73,10 @@ s_recording = {'name': 'recording', 'do': 'record()', "stop": "stop()"}
 s_processing = {'name': 'processing', 'do': 'process()'}
 
 recorder_stm = Machine(name='recorder_stm', transitions=[t0, t1, t2, t3], states=[s_recording, s_processing], obj=recorder)
+
+driver = Driver()
+driver.add_machine(recorder_stm)
+driver.start()
+driver.send("start", "recorder_stm")
+time.sleep(3)
+driver.send("stop", "recorder_stm")
