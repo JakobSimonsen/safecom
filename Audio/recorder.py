@@ -6,7 +6,6 @@ from datetime import datetime
 import pyaudio
 import wave
 
-
 class Recorder:
     def __init__(self):
         self.recording = False
@@ -53,6 +52,7 @@ class Recorder:
         wf.writeframes(b''.join(self.frames))
         wf.close()
 
+
 recorder = Recorder()
 
 t0 = {'source': 'initial', 'target': 'ready'}
@@ -63,18 +63,4 @@ t3 = {'trigger': 'done', 'source': 'processing', 'target': 'ready'}
 s_recording = {'name': 'recording', 'do': 'record()', "stop": "stop()"}
 s_processing = {'name': 'processing', 'do': 'process()'}
 
-stm = Machine(name='stm', transitions=[t0, t1, t2, t3], states=[s_recording, s_processing], obj=recorder)
-recorder.stm = stm
-
-driver = Driver()
-driver.add_machine(stm)
-driver.start()
-
-print("driver started")
-
-driver.send('start', 'stm')
-print("sent start, now waiting for a 5 seconds long recording")
-time.sleep(5)
-print("wait is over")
-driver.send('stop', 'stm')
-print("sent stop")
+recorder_stm = Machine(name='recorder_stm', transitions=[t0, t1, t2, t3], states=[s_recording, s_processing], obj=recorder)
