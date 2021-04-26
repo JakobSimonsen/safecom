@@ -2,7 +2,7 @@ from stmpy import Machine, Driver
 from os import system
 import os
 import time
-
+from datetime import datetime
 import pyaudio
 import wave
 
@@ -16,6 +16,9 @@ class Recorder:
         self.fs = 44100  # Record at 44100 samples per second
         self.filename = "output.wav"
         self.p = pyaudio.PyAudio()
+
+    def getCurrentTimeAsString(self):
+        return datetime.utcnow().isoformat(sep=' ', timespec='milliseconds') #Use this to convert back: https://stackoverflow.com/questions/127803/how-do-i-parse-an-iso-8601-formatted-date/49784038#49784038
 
     def record(self):
         stream = self.p.open(format=self.sample_format,
