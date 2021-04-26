@@ -72,8 +72,7 @@ class Recorder:
         wf.writeframes(b''.join(self.frames))
         wf.close()
         #Could put this in separate state, but works here for now
-        #self.parentDriver
+        self.parentDriver.send("fileSaved", "coordinator", [filename])
 
-#recorder = Recorder()
 
 
