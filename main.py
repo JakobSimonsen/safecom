@@ -122,13 +122,18 @@ coordinator.stm = machine
 driver = Driver()
 driver.add_machine(machine)
 coordinator.client.stm_driver = driver
-driver.add_machine(recorder.recorder_stm)
+
+recorderInstance = recorder.Recorder(driver)
+driver.add_machine(recorderInstance.stm)
 driver.add_machine(playback.playback_stm)
 driver.start()
 coordinator.stm_driver = driver
 playback.player.stm_driver = driver
 
-
+#Just used to test the recorder.py atm -Toni
+#driver.send("start", "recorder_stm")
+#time.sleep(3)
+#driver.send("stop", "recorder_stm")
 
 
 
