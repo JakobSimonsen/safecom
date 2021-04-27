@@ -4,6 +4,7 @@ from mqtt_client import MQTT_Client
 from Audio import recorder, playback
 from stmpy import Driver, Machine
 from threading import Thread
+import collections
 
 class Coordinator:
     def __init__(self):
@@ -11,6 +12,7 @@ class Coordinator:
         self.priority = 0
         self.client = MQTT_Client()
         self.client.start('mqtt.item.ntnu.no', 1883)
+        self.outgoing_queue = collections.deque()
 
         #self.voice_msg??
 
@@ -47,6 +49,18 @@ class Coordinator:
         self.channel = new_channel
         self.client.client.subscribe(new_channel)
         print("subscribed to", new_channel)
+
+    def add_to_queue(self, msg_reference):
+        try:
+            self.outgoing_queue.append(msg_reference)
+        except:
+            print("error adding to outgoing queue")
+
+    def add_to_end_queue(self, msg_reference):
+        try:
+            self.outgoing_queue.appendleft(msg_reference)
+        except:
+            print("errpr adding to outgoing queue with left append")
 
 
 coordinator = Coordinator()
