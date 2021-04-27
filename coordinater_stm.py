@@ -40,6 +40,8 @@ class Coordinator:
         #?? send(s)
         #self.client.client.publish(self.channel, "message")
         # (self, topic, priority, wav_file)
+
+        # Need to be changed
         self.client.publish_recorded_message(self.channel, self.priority, "test_sound.wav")
 
 
@@ -134,9 +136,9 @@ coordinator.stm_driver = driver
 playback.player.stm_driver = driver
 
 #Just used to test the recorder.py atm -Toni
-driver.send("start", "recorder_stm")
-time.sleep(3)
-driver.send("stop", "recorder_stm")
+#driver.send("start", "recorder_stm")
+#time.sleep(3)
+#driver.send("stop", "recorder_stm")
 
 
 

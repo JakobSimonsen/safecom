@@ -72,13 +72,15 @@ class Recorder:
         #Could put this in separate state, but works here for now
         #self.parentDriver.send("fileSaved", "coordinator", [filename])
 
-        #TEST
-        
-        self.parentDriver.send("send_button", "coordinator", )
-        
-        client = MQTT_Client()
 
-        client.start('mqtt.item.ntnu.no', 1883, "team2/audio_test")
-        client.publish_recorded_message("team2/audio_test", 1, str(filename))
+        # =============
+        #   TEST CODE
+        # ============= s
+        #self.parentDriver.send("send_button", "coordinator", )
+        
+        #client = MQTT_Client()
+
+        #client.start('mqtt.item.ntnu.no', 1883, "team2/audio_test")
+        #client.publish_recorded_message("team2/audio_test", 1, str(filename))
 
 
