@@ -9,6 +9,7 @@ import wave
 
 class Player:
     def __init__(self):
+        self.stm_driver = 0
         pass
 
     def play(self):
@@ -51,13 +52,6 @@ t2 = {'trigger': 'done', 'source': 'playing', 'target': 'ready'}
 
 s_playing = {'name': 'playing', 'do': 'play()'}
 
-stm = Machine(name='stm', transitions=[t0, t1, t2], states=[s_playing], obj=player)
-recorder.stm = stm
+playback_stm = Machine(name='playback_stm', transitions=[t0, t1, t2], states=[s_playing], obj=player)
 
-driver = Driver()
-driver.add_machine(stm)
-driver.start()
 
-print("driver started")
-
-driver.send('start', 'stm')
