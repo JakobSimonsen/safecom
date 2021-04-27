@@ -57,7 +57,7 @@ class MQTT_Client:
             print("Exception" + str(e))
 
 
-    def start(self, broker, port):
+    def start(self, broker, port, subscribe_channel):
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
@@ -68,7 +68,7 @@ class MQTT_Client:
         print('Connecting to {}:{}'.format(broker, port))
         self.client.connect(broker, port)
 
-        self.client.subscribe("/audio_test_2")
+        self.client.subscribe(subscribe_channel)
         
         try:
             thread = Thread(target=self.client.loop_forever)
