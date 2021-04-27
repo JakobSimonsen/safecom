@@ -5,6 +5,8 @@ import time
 from datetime import datetime
 import pyaudio
 import wave
+# test
+from mqtt_client import MQTT_Client
 
 class Recorder:
     def __init__(self, parentDriver):
@@ -12,7 +14,7 @@ class Recorder:
         self.recording = False
         self.chunk = 1024  # Record in chunks of 1024 samples
         self.sample_format = pyaudio.paInt16  # 16 bits per sample
-        self.channels = 2
+        self.channels = 1
         self.fs = 44100  # Record at 44100 samples per second
         #self.filename = "output.wav"
         self.p = pyaudio.PyAudio()
@@ -39,11 +41,7 @@ class Recorder:
 
     def record(self):
         print("recording")
-        stream = self.p.open(format=self.sample_format,
-                channels=self.channels,
-                rate=self.fs,
-                frames_per_buffer=self.chunk,
-                input=True)
+        stream = self.p.open(format=self.sample_format, channels=self.channels, rate=self.fs, frames_per_buffer=self.chunk, input=True)
         self.frames = []  # Initialize array to store frames
         # Store data in chunks for 3 seconds
         self.recording = True
@@ -72,7 +70,17 @@ class Recorder:
         wf.writeframes(b''.join(self.frames))
         wf.close()
         #Could put this in separate state, but works here for now
-        self.parentDriver.send("fileSaved", "coordinator", [filename])
+        #self.parentDriver.send("fileSaved", "coordinator", [filename])
 
+
+        # =============
+        #   TEST CODE
+        # ============= s
+        #self.parentDriver.send("send_button", "coordinator", )
+        
+        #client = MQTT_Client()
+
+        #client.start('mqtt.item.ntnu.no', 1883, "team2/audio_test")
+        #client.publish_recorded_message("team2/audio_test", 1, str(filename))
 
 
