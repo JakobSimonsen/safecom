@@ -9,7 +9,7 @@ class Coordinator:
     def __init__(self):
         self.channel = None
         self.priority = 0
-        self.client = MQTT_Client()
+        #self.client = MQTT_Client()
         self.client.start('mqtt.item.ntnu.no', 1883)
 
         #self.voice_msg??
@@ -38,6 +38,7 @@ class Coordinator:
         self.client.publish_recorded_message(self.channel, self.priority, "test_sound.wav")
         #self.client.publish_recorded_message(self.channel, self.priority, filename)
 
+    def add_to_top_of_queue(self, filename):
 
     def set_new_channel(self, new_channel):
         print("setting new channel")
@@ -72,7 +73,6 @@ t4 = {'trigger':'t3',
 t5 = {'trigger':'end_recording_button',
       'source': 'recording',
       'target': 'saving_file'}
-
 
 t6 = {'trigger':'file_saved',
       'source': 'saving_file',
@@ -111,6 +111,7 @@ saving_file = {'name': 'saving_file',
 sending = {'name': 'sending',
            'entry': 'send_msg',
            'new_incoming_msg': 'defer'
+           'sending_failed': 'add_to_top_of_queue(filename)'
            }
 
 playing = {'name': 'playing',
@@ -125,6 +126,8 @@ driver.add_machine(machine)
 coordinator.client.stm_driver = driver
 
 recorderInstance = recorder.Recorder(driver)
+client = MQTT_Client(driver)
+
 driver.add_machine(recorderInstance.stm)
 driver.add_machine(playback.playback_stm)
 driver.start()
