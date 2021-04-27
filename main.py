@@ -5,18 +5,24 @@ import coordinator_stm
 with open('./channels.json') as f:
     channel_values = json.load(f)
 
+title_font = ('Arial', 25)
+normal_font = ('Arial', 18)
+sg.theme('DarkBlue4')
 
-title = [sg.Text('This is your new awesome walkie talki')]
-messages = [sg.Listbox(values=["Message 1", "Message 2"], size=(30, 10))]
+title = [sg.Text('This is your new awesome walkie talkie', font=title_font)]
+messages = [sg.Listbox(values=["Message 1", "Message 2"],
+                       size=(30, 10), font=normal_font, enable_events=True, key='message')]
 
 channels = sg.Combo([channel_values[v]['name'] for v in channel_values],
-                    enable_events=True, key='channels', size=(15, 1))
-channel_button = sg.Button('Update', size=(10, 1), key='Update')
+                    enable_events=True, key='channels', size=(15, 1), font=normal_font)
+channel_button = sg.Button('Update', size=(
+    10, 1), key='Update', font=normal_font)
 
-priority = [sg.Checkbox('Priority', key="Priority")]
-record_button = [sg.Button('Record', size=(25, 1), key='Record', visible=True)]
+priority = [sg.Checkbox('Priority', key="Priority", font=normal_font)]
+record_button = [sg.Button('Record', size=(
+    25, 1), key='Record', visible=True, font=normal_font)]
 stop_button = [sg.Button('Stop and Send', size=(25, 1),
-                         key='Stop', visible=False)]
+                         key='Stop', visible=False, font=normal_font)]
 
 # All the stuff inside your window.
 layout = [title,
@@ -29,7 +35,7 @@ layout = [title,
 margins = (100, 50)
 
 # Create the Window
-window = sg.Window('Walkie Talkie boj', layout, margins,
+window = sg.Window('Walkie Talkie boj', layout, margins, size=(500, 500),
                    text_justification="center", element_justification="center")
 
 # Event Loop to process "events" and get the "values" of the inputs
@@ -57,6 +63,11 @@ while True:
             if channel['name'] == channel_name:
                 coordinator_stm.driver.send(
                     "change_channel", "coordinator", args=[channel['topic']])
+
+    elif event == 'message':
+        message_file = values['message']
+        # Jakobi this is your metode
+        # coordinator_stm.driver.send(args=[message_file])
 
 coordinator_stm.driver.stop()
 window.close()
