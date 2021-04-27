@@ -136,9 +136,9 @@ coordinator.stm_driver = driver
 playback.player.stm_driver = driver
 
 #Just used to test the recorder.py atm -Toni
-#driver.send("start", "recorder_stm")
-#time.sleep(3)
-#driver.send("stop", "recorder_stm")
+driver.send("start", "recorder_stm")
+time.sleep(3)
+driver.send("stop", "recorder_stm")
 
 
 

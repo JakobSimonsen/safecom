@@ -9,9 +9,10 @@ from playsound import playsound
 
 class MQTT_Client:
 
-    def __init__(self):
+    def __init__(self, driver):
         self.broker = None
         self.port = None
+        self.driver = driver
 
 
     def on_connect(self, client, userdata, flags, rc):
@@ -119,6 +120,12 @@ class MQTT_Client:
 
             #publish(topic, payload=None, qos=0, retain=False) - default values
             result = self.client.publish(topic=topic,payload=send_data,qos=2, retain=False)  
+            
+            # If one of the packets don't work
+            if result[0] > 0:
+                # send to state machine that the message failed
+                self.driver.send('sending_failed', 'coordinator', wav_file)
+
 
 
 
