@@ -1,20 +1,26 @@
 import PySimpleGUI as sg
 import json
+import coordinator_stm
 
 with open('./channels.json') as f:
     channel_values = json.load(f)
+    print(channel_values['channel1']['name'])
+
 
 title = [sg.Text('This is your new awesome walkie talki')]
-messages = [sg.Listbox(values=["Message 1", "Message2"], size=(30, 10))]
-channels = [sg.Combo([channel_values[v] for v in channel_values],
+messages = [sg.Listbox(values=["Message 1", "Message 2"], size=(30, 10))]
+channels = [sg.Combo([channel_values[v]['name'] for v in channel_values],
                      enable_events=True, key='channels', size=(15, 1))]
+channel_button = [sg.Button('Update', size=(10,1), key='Update')]
+record_button = [sg.Button('Record', size=(25, 1), key='Record', visible=True)]
+stop_button = [sg.Button('Stop and Send', size=(25, 1), key='Stop', visible=False)]
 
 # All the stuff inside your window.
 layout = [title,
           messages,
-          channels,
-          [sg.Button('Record', size=(25, 1))],
-          [sg.Button('Send', size=(25, 1))]]
+          [channels, channel_button],
+          record_button,
+          stop_button]
 
 margins = (100, 50)
 
@@ -30,8 +36,21 @@ while True:
 
     if event == 'Record':
         print('recording')
+        coordinator_stm.driver.send("record_button", "coordinator")
+        window['Record'].Update(visible=False)
+        window['Stop'].Update(visible=True)
 
-    if event == 'Send':
-        print('sending')
+    if event == 'Stop':
+        print('stop recording')
+        coordinator_stm.driver.send("end_recording_button", "coordinator")
+        window['Record'].Update(visible=True)
+        window['Stop'].Update(visible=False)
+
+    if event == 'Update':
+        channel_name = values['channels']
+        for channel in channel_values.values():
+            if channel['name'] == channel_name:
+                coordinator_stm.driver.send("change_channel", "coordinator", args=[channel['topic']])
+
 
 window.close()
