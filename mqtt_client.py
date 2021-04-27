@@ -57,8 +57,15 @@ class MQTT_Client:
         except Exception as e:
             print("Exception" + str(e))
 
+    def get_set_broker(self, broker=None):
+        if broker: self.broker=broker
+        return self.broker
 
-    def start(self, broker, port, subscribe_channel):
+    def get_set_port(self, port=None):
+        if port: self.port=port
+        return self.port
+
+    def start(self, broker, port):
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
@@ -69,7 +76,7 @@ class MQTT_Client:
         print('Connecting to {}:{}'.format(broker, port))
         self.client.connect(broker, port)
 
-        self.client.subscribe(subscribe_channel)
+        #self.client.subscribe(subscribe_channel)
         
         try:
             thread = Thread(target=self.client.loop_forever)
