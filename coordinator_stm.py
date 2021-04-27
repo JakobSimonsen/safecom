@@ -4,13 +4,16 @@ from mqtt_client import MQTT_Client
 from Audio import recorder, playback
 from stmpy import Driver, Machine
 from threading import Thread
+import collections
+import queue
 
 class Coordinator:
     def __init__(self):
         self.channel = None
         self.priority = 0
         self.client = None
-        
+        self.high_priority_queue = queue.Queue()
+        self.low_priority_queue = queue.Queue()
 
         #self.voice_msg??
 
@@ -36,14 +39,26 @@ class Coordinator:
         print("sending message")
         self.client.publish_recorded_message(self.channel, self.priority, filename)
 
-    def add_to_top_of_queue(self, filename):
-          #Kode noe kult her 
 
     def set_new_channel(self, new_channel):
         print("setting new channel")
         self.channel = new_channel
         self.client.subscribe(new_channel)
         print("subscribed to", new_channel)
+
+    def add_to_queue(self, msg_reference):
+        try:
+        # High priority: 1
+        if msg_reference[1] == 1:
+            self.high_priority_queue.put(msg_reference) #[filename, priority, topic] 
+        except:
+            print("error adding to high priority queue")
+        # Low priority: 0
+        if msg_reference[1] == 0:
+            self.low_priority_queue.put(msg_reference) #[filename, priority, topic] 
+        except:
+            print("error adding to low priority queue")
+
 
 
 coordinator = Coordinator()

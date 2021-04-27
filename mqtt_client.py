@@ -131,10 +131,9 @@ class MQTT_Client:
             # If one of the packets don't work
             if result[0] > 0:
                 # send to state machine that the message failed
-                self.driver.send('sending_failed', 'coordinator',[filename])
+                self.driver.send('sending_failed', 'coordinator',[filename, priority, topic])
 
-
-
+ 
 
         
        
