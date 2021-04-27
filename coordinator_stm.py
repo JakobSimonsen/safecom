@@ -35,7 +35,7 @@ class Coordinator:
     def send_msg(self):
         print("sending message")
         #?? send(s)
-        self.client.client.publish(self.channel, "message")
+        self.client.publish_recorded_message(self.channel, self.priority, "test_sound.wav")
         #self.client.publish_recorded_message(self.channel, self.priority, filename)
 
 
