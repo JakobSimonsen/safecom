@@ -40,8 +40,6 @@ class Coordinator:
         self.client.publish_recorded_message(self.channel, self.priority, "test_sound.wav")
         #self.client.publish_recorded_message(self.channel, self.priority, filename)
 
-    def add_to_top_of_queue(self, filename):
-
     def set_new_channel(self, new_channel):
         print("setting new channel")
         #Get chosen channel on gui
@@ -57,7 +55,7 @@ class Coordinator:
         except:
             print("error adding to outgoing queue")
 
-    def add_to_end_queue(self, msg_reference):
+    def add_to_start_queue(self, msg_reference):
         try:
             self.outgoing_queue.appendleft(msg_reference)
         except:
