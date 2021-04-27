@@ -7,11 +7,10 @@ from threading import Thread
 
 class Coordinator:
     def __init__(self):
-        self.channel = "team2"
+        self.channel = None
         self.priority = 0
         self.client = MQTT_Client()
         self.client.start('mqtt.item.ntnu.no', 1883)
-        self.client.client.subscribe(self.channel)
 
         #self.voice_msg??
 
@@ -43,7 +42,8 @@ class Coordinator:
     def set_new_channel(self, new_channel):
         print("setting new channel")
         #Get chosen channel on gui
-        self.client.client.unsubscribe(self.channel)
+        if self.channel != None:
+            self.client.client.unsubscribe(self.channel)
         self.channel = new_channel
         self.client.client.subscribe(new_channel)
         print("subscribed to", new_channel)
