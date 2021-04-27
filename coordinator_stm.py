@@ -111,7 +111,7 @@ saving_file = {'name': 'saving_file',
 sending = {'name': 'sending',
            'entry': 'send_msg',
            'new_incoming_msg': 'defer'
-           'sending_failed': 'add_to_top_of_queue(filename)'
+           'sending_failed': 'add_to_top_of_queue(*)'
            }
 
 playing = {'name': 'playing',

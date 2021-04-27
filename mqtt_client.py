@@ -80,10 +80,10 @@ class MQTT_Client:
             ###print('Interrupted')
             #self.client.disconnect()
         
-    def publish_recorded_message(self, topic, priority, wav_file):
+    def publish_recorded_message(self, topic, priority, filename):
         
         # Turn audio file into bytestream
-        audio_file = open(wav_file, 'rb')
+        audio_file = open(filename, 'rb')
         audio_string = audio_file.read()
         audio_file.close()
         byte_array = bytearray(audio_string)
@@ -124,7 +124,7 @@ class MQTT_Client:
             # If one of the packets don't work
             if result[0] > 0:
                 # send to state machine that the message failed
-                self.driver.send('sending_failed', 'coordinator', wav_file)
+                self.driver.send('sending_failed', 'coordinator',[filename])
 
 
 
