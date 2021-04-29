@@ -35,7 +35,7 @@ layout = [title,
 margins = (100, 50)
 
 # Create the Window
-window = sg.Window('Walkie Talkie boj', layout, margins, size=(500, 500),
+window = sg.Window('Walkie Talkie boj', layout, margins, size=(500, 600),
                    text_justification="center", element_justification="center")
 
 # Event Loop to process "events" and get the "values" of the inputs
