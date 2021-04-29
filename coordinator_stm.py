@@ -145,7 +145,6 @@ sending = {'name': 'sending',
            'sending_failed': 'add_to_top_of_queue(*)'}
 
 playing = {'name': 'playing',
-           'entry': 'start_timer("t1", 10000)',
            'new_incoming_msg': 'defer'}
 
 machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t9, t10, t11, t12], obj=coordinator, states=[
