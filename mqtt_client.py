@@ -18,6 +18,7 @@ class MQTT_Client:
     def on_connect(self, client, userdata, flags, rc):
         print('on_connect(): {}'.format(mqtt.connack_string(rc)))
 
+   
     def on_message(self, client, userdata, msg):
         #print('on_message(): topic: {}'.format(msg.topic))
         #
@@ -56,6 +57,7 @@ class MQTT_Client:
                 
         except Exception as e:
             print("Exception" + str(e))
+
 
     def get_set_broker(self, broker=None):
         if broker: self.broker=broker
