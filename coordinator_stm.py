@@ -124,7 +124,7 @@ t10 = {'trigger': 'sending_success',
 
 t11 = {'trigger': 'play_incoming_message',
         'source': 'idle',
-        'effect'; 'play_msg(*)',
+        'effect': 'play_msg(*)',
         'target': 'playing'}
 
 
