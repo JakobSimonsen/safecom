@@ -43,8 +43,10 @@ class Coordinator:
 
     def set_new_channel(self, new_channel):
         print("setting new channel")
+        if (self.channel != None):
+            self.client.client.unsubscribe(self.channel)
         self.channel = new_channel
-        self.client.subscribe(new_channel)
+        self.client.client.subscribe(new_channel)
         print("subscribed to", new_channel)
 
     def in_sending_state(self):
