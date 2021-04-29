@@ -41,16 +41,20 @@ class Player:
         # Close and terminate the stream
         stream.close()
         p.terminate()
+    
+    def finished_playing(self):
+        self.driver.send('done_playing', 'coordinator')
 
 
 player = Player()
 
 t0 = {'source': 'initial', 'target': 'ready'}
 t1 = {'trigger': 'start', 'source': 'ready', 'target': 'playing'}
-t2 = {'trigger': 'done', 'source': 'playing', 'target': 'ready'}
+t2 = {'trigger': 'done', 'source': 'playing', 'target': 'ready', 'effect':'finished_playing'}
+
 
 s_playing = {'name': 'playing', 'do': 'play()'}
 
-playback_stm = Machine(name='playback_stm', transitions=[t0, t1, t2], states=[s_playing], obj=player)
+playback_stm = Machine(name='playback_stm', transitions=[t0, t1, t2, t3], states=[s_playing], obj=player)
 
 
