@@ -6,7 +6,7 @@ from stmpy import Driver, Machine
 from threading import Thread
 import collections
 import queue
-import playsound
+from playsound import playsound
 
 
 class Coordinator:
@@ -35,6 +35,7 @@ class Coordinator:
     def play_msg(self, filename):
         print("playing message w. "+filename)
         playsound(filename)
+        self.stm_driver.send("done_playing", "coordinator")
         #self.stm_driver.send("start", "playback_stm", [filename])
         
         #self.stm_driver.send("done", "playback_stm")
