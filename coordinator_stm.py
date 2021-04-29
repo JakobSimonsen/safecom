@@ -50,7 +50,7 @@ class Coordinator:
     def in_sending_state(self):
         print("Now in sending state")
 
-"""
+    """
     def add_to_queue(self, msg_reference):
         try:
         # High priority: 1
@@ -63,7 +63,7 @@ class Coordinator:
             self.low_priority_queue.put(msg_reference) #[filename, priority, topic] 
         except:
             print("error adding to low priority queue")
-"""
+    """
     def resend_message(self, filename_in_list):
         time.sleep(0.5)
         self.times_retried += 1
