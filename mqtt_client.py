@@ -9,14 +9,16 @@ from playsound import playsound
 
 class MQTT_Client:
 
-    def __init__(self):
+    def __init__(self, driver):
         self.broker = None
         self.port = None
+        self.driver = driver
 
 
     def on_connect(self, client, userdata, flags, rc):
         print('on_connect(): {}'.format(mqtt.connack_string(rc)))
 
+   
     def on_message(self, client, userdata, msg):
         #print('on_message(): topic: {}'.format(msg.topic))
         #
@@ -57,7 +59,15 @@ class MQTT_Client:
             print("Exception" + str(e))
 
 
-    def start(self, broker, port, subscribe_channel):
+    def get_set_broker(self, broker=None):
+        if broker: self.broker=broker
+        return self.broker
+
+    def get_set_port(self, port=None):
+        if port: self.port=port
+        return self.port
+
+    def start(self, broker, port):
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
@@ -68,7 +78,7 @@ class MQTT_Client:
         print('Connecting to {}:{}'.format(broker, port))
         self.client.connect(broker, port)
 
-        self.client.subscribe(subscribe_channel)
+        #self.client.subscribe(subscribe_channel)
         
         try:
             thread = Thread(target=self.client.loop_forever)
@@ -79,10 +89,10 @@ class MQTT_Client:
             ###print('Interrupted')
             #self.client.disconnect()
         
-    def publish_recorded_message(self, topic, priority, wav_file):
+    def publish_recorded_message(self, topic, priority, filename):
         
         # Turn audio file into bytestream
-        audio_file = open(wav_file, 'rb')
+        audio_file = open(filename, 'rb')
         audio_string = audio_file.read()
         audio_file.close()
         byte_array = bytearray(audio_string)
@@ -119,8 +129,16 @@ class MQTT_Client:
 
             #publish(topic, payload=None, qos=0, retain=False) - default values
             result = self.client.publish(topic=topic,payload=send_data,qos=2, retain=False)  
+            
+            # If one of the packets don't work
+            if result[0] > 0:
+                # send to state machine that the message failed
+                self.driver.send('sending_failed', 'coordinator',[filename])
+                break
+        else:
+            self.driver.send('sending_success', 'coordinator')
 
-
+ 
 
         
        
