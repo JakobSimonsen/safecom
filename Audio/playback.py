@@ -51,8 +51,11 @@ class Player:
         stream.close()
         p.terminate()
         wf.close()
+        self.parentDriver.send('done','playback_stm')
+        #self.finished_playing()
     
     def finished_playing(self):
+        print("Called finished_playing")
         self.parentDriver.send('done_playing', 'coordinator')
 
 

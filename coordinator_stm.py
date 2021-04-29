@@ -6,6 +6,7 @@ from stmpy import Driver, Machine
 from threading import Thread
 import collections
 import queue
+from playsound import playsound
 
 
 class Coordinator:
@@ -33,8 +34,9 @@ class Coordinator:
 
     def play_msg(self, filename):
         print("playing message w. "+filename)
-
-        self.stm_driver.send("start", "playback_stm", [filename])
+        playsound(filename)
+        #self.stm_driver.send("start", "playback_stm", [filename])
+        
         #self.stm_driver.send("done", "playback_stm")
 
     def send_msg(self, fileName):
@@ -110,10 +112,6 @@ t7 = {'trigger': 't1',
       'source': 'playing',
       'target': 'idle'}
 
-t8 = {'trigger': 'stop_button',
-      'source': 'playing',
-      'target': 'idle'}
-
 t9 = {'trigger': 'sending_failed',
       'source': 'sending',
       'target': 'saving_file'}
@@ -149,7 +147,7 @@ playing = {'name': 'playing',
            'entry': 'start_timer("t1", 10000)',
            'new_incoming_msg': 'defer'}
 
-machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12], obj=coordinator, states=[
+machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t9, t10, t11, t12], obj=coordinator, states=[
                   idle, recording, saving_file, playing, sending])
 coordinator.stm = machine
 
