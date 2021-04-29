@@ -14,6 +14,7 @@ class Coordinator:
         self.client = None
         self.high_priority_queue = queue.Queue()
         self.low_priority_queue = queue.Queue()
+        self.times_retried = 0
 
         #self.voice_msg??
 
@@ -45,7 +46,7 @@ class Coordinator:
         self.channel = new_channel
         self.client.subscribe(new_channel)
         print("subscribed to", new_channel)
-
+"""
     def add_to_queue(self, msg_reference):
         try:
         # High priority: 1
@@ -58,7 +59,16 @@ class Coordinator:
             self.low_priority_queue.put(msg_reference) #[filename, priority, topic] 
         except:
             print("error adding to low priority queue")
+"""
+    def resend_message(self, filename_in_list):
+        time.sleep(0.5)
+        self.times_retried += 1
+        if self.times_retried > 100:
+            self.stm_driver.send('sending_success', 'coordinator')
 
+        self.send_msg(filename_in_list[0])
+
+          
 
 
 coordinator = Coordinator()
@@ -120,9 +130,9 @@ saving_file = {'name': 'saving_file',
                  'new_incoming_msg': 'defer'}
 
 sending = {'name': 'sending',
-           'entry': 'send_msg',
+           'entry': 'send_msg(*)',
            'new_incoming_msg': 'defer'
-           'sending_failed': 'add_to_top_of_queue(*)'
+           'sending_failed': 'resend_message(*)'
            }
 
 playing = {'name': 'playing',
