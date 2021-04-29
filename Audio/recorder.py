@@ -53,7 +53,7 @@ class Recorder:
         stream.stop_stream()
         stream.close()
         # Terminate the PortAudio interface
-        self.p.terminate()
+        #self.p.terminate() Had to remove, but it's ok since it looks like it terminates automatically when the terminal closes.
 
     def stop(self):
         print("stop")
