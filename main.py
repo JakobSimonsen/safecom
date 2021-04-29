@@ -17,8 +17,8 @@ title = [sg.Text('This is your new awesome walkie talkie', font=title_font)]
 messages = [sg.Listbox(values=msg,
                        size=(30, len(msg)), font=normal_font, enable_events=True, key='message')]
 
-channels = sg.Combo([channel_values[v]['name'] for v in channel_values],
-                    enable_events=True, key='channels', size=(15, 1), font=normal_font)
+channels = sg.Combo([channel_values[v]['name'] for v in channel_values], default_value=channel_values['channel1']
+                    ['name'], enable_events=True, key='channels', size=(15, 1), font=normal_font)
 channel_button = sg.Button('Update', size=(
     10, 1), key='Update', font=normal_font)
 
