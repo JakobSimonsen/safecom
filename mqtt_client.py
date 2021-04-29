@@ -50,8 +50,7 @@ class MQTT_Client:
                 
                 # play correct audio file
                 elif js_str['last_packet'] == True:
-                    playsound(file_name)
-                    
+                    self.driver.send("play_incoming_message", 'coordinator', [filename])
                 
                 # Append to correct audio file
                 else:
