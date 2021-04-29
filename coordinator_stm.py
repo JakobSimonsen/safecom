@@ -7,6 +7,7 @@ from threading import Thread
 import collections
 import queue
 
+
 class Coordinator:
     def __init__(self):
         self.channel = "team2/channel1"#None #Bytt ut med å bruke channels.json-objektet
@@ -16,23 +17,24 @@ class Coordinator:
         self.low_priority_queue = queue.Queue()
         self.times_retried = 0
 
-        #self.voice_msg??
+        # self.voice_msg??
 
     def start_recording(self):
         print("start_recording called in coordinator")
         #self.recorder.record()
         self.stm_driver.send("start", "recorder_stm")
 
-    def end_recording(self):
+    def end_recording(self, priority):
         print("ending recording")
-        #self.recorder.stop()
-        #self.recorder.process()
+        self.priority = 1 if priority else 0
+        # self.recorder.stop()
+        # self.recorder.process()
         self.stm_driver.send("stop", "recorder_stm")
 
     def play_msg(self):
         print("playing message")
-        #self.player.play()
-        #??
+        # self.player.play()
+        # ??
         self.stm_driver.send("start", "playback_stm")
         self.stm_driver.send("done", "playback_stm")
 
@@ -77,54 +79,58 @@ coordinator = Coordinator()
 t0 = {'source': 'initial',
       'target': 'idle'}
 
-t1 = {'trigger':'record_button',
+t1 = {'trigger': 'record_button',
       'source': 'idle',
       'target': 'recording'}
 
-t2 = {'trigger':'new_incoming_msg',
+t2 = {'trigger': 'new_incoming_msg',
       'source': 'idle',
       'target': 'playing'}
 
-t3 = {'trigger':'play_from_history',
+t3 = {'trigger': 'play_from_history',
       'source': 'idle',
       'target': 'playing'}
 
-t4 = {'trigger':'t3',
+t4 = {'trigger': 't3',
       'source': 'recording',
       'target': 'saving_file'}
 
-t5 = {'trigger':'end_recording_button',
+t5 = {'trigger': 'end_recording_button',
       'source': 'recording',
-      'target': 'saving_file'}
+      'target': 'saving_file',
+      'effect': 'end_recording(*)'}
 
-t6 = {'trigger':'file_saved',
+t6 = {'trigger': 'file_saved',
       'source': 'saving_file',
       'effect': 'send_msg(*)',
       'target': 'sending'}
 
-t7 = {'trigger':'t1',
+t7 = {'trigger': 't1',
       'source': 'playing',
       'target': 'idle'}
 
-t8 = {'trigger':'stop_button',
+t8 = {'trigger': 'stop_button',
       'source': 'playing',
       'target': 'idle'}
 
-t9 = {'trigger':'sending_failed',
+t9 = {'trigger': 'sending_failed',
       'source': 'sending',
       'target': 'saving_file'}
+      
+t10 = {'trigger': 'sending_success',
+       'source': 'sending',
+       'target': 'idle'}
 
-t10 = {'trigger':'sending_success',
-      'source': 'sending',
-      'target': 'idle'}
-
+t11 = {'trigger': 'fileSaved',
+       'source': 'saving_file',
+       'target': 'sending'}
 
 
 idle = {'name': 'idle', 'change_channel': 'set_new_channel(*)'}
 
 recording = {'name': 'recording',
              'entry': 'start_recording; start_timer("t3", 180000); ',
-             'exit': 'end_recording',
+
              'new_incoming_msg': 'defer'}
 
 saving_file = {'name': 'saving_file',
@@ -140,7 +146,8 @@ playing = {'name': 'playing',
            'entry': 'start_timer("t1", 10000); play_msg',
            'new_incoming_msg': 'defer'}
 
-machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10], obj=coordinator, states=[idle, recording, saving_file, playing, sending])
+machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11], obj=coordinator, states=[
+                  idle, recording, saving_file, playing, sending])
 coordinator.stm = machine
 
 driver = Driver()
@@ -175,3 +182,7 @@ driver.send("end_recording_button", "coordinator")
 
 
 
+# Just used to test the recorder.py atm -Toni
+#driver.send("start", "recorder_stm")
+# time.sleep(3)
+#driver.send("stop", "recorder_stm")
