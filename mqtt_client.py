@@ -44,13 +44,17 @@ class MQTT_Client:
                 output_file = open(file_name, "wb")
                 output_file.write(byte_array)
                 output_file.close()
-            
+                print("Receive: " + js_str['seq_number'])
             # play correct audio file
             elif js_str['last_packet'] == True:
+                print("Receive: " + js_str['seq_number'])
+                print("Last packet")
                 playsound(file_name)
+
             
             # Append to correct audio file
             else:
+                print(js_str['seq_number'])
                 output_file = open(file_name, "ab")
                 output_file.write(byte_array)
                 output_file.close()
@@ -78,7 +82,7 @@ class MQTT_Client:
         print('Connecting to {}:{}'.format(broker, port))
         self.client.connect(broker, port)
 
-        #self.client.subscribe(subscribe_channel)
+        self.client.subscribe(self.listen_to_topic)
         
         try:
             thread = Thread(target=self.client.loop_forever)
@@ -113,6 +117,7 @@ class MQTT_Client:
         # Splits data into smaller chunks
         all_data = [all_data[i:i + chunk_size] for i in range(0, len(all_data), chunk_size)] 
         last_sequene_number = len(all_data)-1
+        print(last_sequene_number)
 
         # unique ID for the whole call/audio-file
         call_id = str(uuid.uuid1())
@@ -129,12 +134,14 @@ class MQTT_Client:
 
             #publish(topic, payload=None, qos=0, retain=False) - default values
             result = self.client.publish(topic=topic,payload=send_data,qos=2, retain=False)  
-            
+            print("Sending: " + str(i))
             # If one of the packets don't work
             if result[0] > 0:
                 # send to state machine that the message failed
                 self.driver.send('sending_failed', 'coordinator',[filename, priority, topic])
-
+                break
+        else:
+            self.driver.send('sending_success', 'coordinator')
  
 
         

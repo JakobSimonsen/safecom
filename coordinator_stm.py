@@ -9,7 +9,7 @@ import queue
 
 class Coordinator:
     def __init__(self):
-        self.channel = "team2/channel1"#None #Bytt ut med å bruke channels.json-objektet
+        self.channel = "#"#None #Bytt ut med å bruke channels.json-objektet
         self.priority = 0
         self.client = None
         self.high_priority_queue = queue.Queue()
@@ -143,6 +143,7 @@ coordinator.client = client
 coordinator.client.stm_driver = driver
 client.start('mqtt.item.ntnu.no', 1883)
 
+
 driver.add_machine(recorderInstance.stm)
 driver.add_machine(playback.playback_stm)
 driver.start()
@@ -150,13 +151,13 @@ coordinator.stm_driver = driver
 playback.player.stm_driver = driver
 
 #Just used to test the coordination between recorder.py, mqtt_client.py and coordinator atm -Toni
-"""
+
 driver.send("record_button", "coordinator")
 coordinator.channel = "team2"
 time.sleep(3)
 print("Sending end_recording_button trigger")
 driver.send("end_recording_button", "coordinator")
-"""
+
 
 
 
