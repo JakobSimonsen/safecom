@@ -31,11 +31,10 @@ class Coordinator:
         # self.recorder.process()
         self.stm_driver.send("stop", "recorder_stm")
 
-    def play_msg(self):
+    def play_msg(self, filename):
         print("playing message")
-        # self.player.play()
-        # ??
-        self.stm_driver.send("start", "playback_stm")
+
+        self.stm_driver.send("start", "playback_stm", [filename])
         self.stm_driver.send("done", "playback_stm")
 
     def send_msg(self, fileName):
@@ -127,6 +126,10 @@ t11 = {'trigger': 'fileSaved',
        'source': 'saving_file',
        'target': 'sending'}
 
+t12 = {'trigger': 'playing_incoming_message',
+        'source': 'idle',
+        'target': 'playing'}
+
 
 idle = {'name': 'idle', 'change_channel': 'set_new_channel(*)'}
 
@@ -144,7 +147,7 @@ sending = {'name': 'sending',
            }
 
 playing = {'name': 'playing',
-           'entry': 'start_timer("t1", 10000); play_msg',
+           'entry': 'start_timer("t1", 10000); play_msg(*)',
            'new_incoming_msg': 'defer'}
 
 machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11], obj=coordinator, states=[
