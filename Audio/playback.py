@@ -41,6 +41,7 @@ class Player:
         # Close and terminate the stream
         stream.close()
         p.terminate()
+        wf.close()
     
     def finished_playing(self):
         self.driver.send('done_playing', 'coordinator')
