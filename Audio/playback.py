@@ -12,8 +12,7 @@ class Player:
         self.stm_driver = 0
         pass
 
-    def play(self):
-        filename = 'output.wav'
+    def play(self, filename):
 
         # Set chunk size of 1024 samples per data frame
         chunk = 1024

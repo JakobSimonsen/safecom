@@ -126,8 +126,9 @@ t11 = {'trigger': 'fileSaved',
        'source': 'saving_file',
        'target': 'sending'}
 
-t12 = {'trigger': 'playing_incoming_message',
+t12 = {'trigger': 'play_incoming_message',
         'source': 'idle',
+        'effect'; 'play_msg(*)',
         'target': 'playing'}
 
 
@@ -147,7 +148,7 @@ sending = {'name': 'sending',
            }
 
 playing = {'name': 'playing',
-           'entry': 'start_timer("t1", 10000); play_msg(*)',
+           'entry': 'start_timer("t1", 10000)',
            'new_incoming_msg': 'defer'}
 
 machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11], obj=coordinator, states=[
