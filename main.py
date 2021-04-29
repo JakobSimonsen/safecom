@@ -8,12 +8,17 @@ with open('./channels.json') as f:
 title_font = ('Arial', 25)
 normal_font = ('Arial', 18)
 sg.theme('DarkBlue4')
+default_channel = channel_values['channel1']['topic']
+
+msg = coordinator_stm.client.GetHistory()
 
 title = [sg.Text('This is your new awesome walkie talkie', font=title_font)]
-messages = [sg.Listbox(values=["Message 1", "Message 2"],
-                       size=(30, 10), font=normal_font, enable_events=True, key='message')]
 
-channels = sg.Combo([channel_values[v]['name'] for v in channel_values],
+
+messages = [sg.Listbox(values=msg,
+                       size=(30, len(msg)), font=normal_font, enable_events=True, key='message')]
+
+channels = sg.Combo([channel_values[v]['name'] for v in channel_values], default_value=default_channel,
                     enable_events=True, key='channels', size=(15, 1), font=normal_font)
 channel_button = sg.Button('Update', size=(
     10, 1), key='Update', font=normal_font)
@@ -34,9 +39,13 @@ layout = [title,
 
 margins = (100, 50)
 
+coordinator_stm.driver.send(
+    "change_channel", "coordinator", args=[default_channel])
+
 # Create the Window
 window = sg.Window('Walkie Talkie boj', layout, margins,
                    text_justification="center", element_justification="center")
+
 
 # Event Loop to process "events" and get the "values" of the inputs
 while True:
@@ -66,8 +75,10 @@ while True:
 
     elif event == 'message':
         message_file = values['message']
+        print('Play message: ', message_file)
         # Jakobi this is your metode
         # coordinator_stm.driver.send(args=[message_file])
+
 
 coordinator_stm.driver.stop()
 window.close()
