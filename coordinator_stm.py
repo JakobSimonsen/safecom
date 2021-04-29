@@ -122,10 +122,9 @@ t10 = {'trigger': 'sending_success',
        'source': 'sending',
        'target': 'idle'}
 
-
 t11 = {'trigger': 'play_incoming_message',
         'source': 'idle',
-        'effect'; 'play_msg(*)',
+        'effect': 'play_msg(*)',
         'target': 'playing'}
 
 t12 = {'trigger': 'done_playing',
@@ -170,14 +169,13 @@ coordinator.stm_driver = driver
 playback.player.stm_driver = driver
 
 #Just used to test the coordination between recorder.py, mqtt_client.py and coordinator atm -Toni
-"""
+'''
 driver.send("record_button", "coordinator")
 coordinator.channel = "team2"
 time.sleep(3)
 print("Sending end_recording_button trigger")
 driver.send("end_recording_button", "coordinator")
-"""
-
+'''
 
 
 
