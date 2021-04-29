@@ -47,17 +47,18 @@ class Player:
         while data != '':
             stream.write(data)
             data = wf.readframes(chunk)
-            
+
             print("inside")
         print("after")
         # Close and terminate the stream
         stream.close()
         p.terminate()
         wf.close()
-        self.finished_playing()
+        self.parentDriver.send('done','playback_stm')
+        #self.finished_playing()
     
     def finished_playing(self):
-        print("Called finished playing")
+        print("Called finished_playing")
         self.parentDriver.send('done_playing', 'coordinator')
 
 
