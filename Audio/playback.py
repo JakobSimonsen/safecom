@@ -44,7 +44,7 @@ class Player:
         wf.close()
     
     def finished_playing(self):
-        self.driver.send('done_playing', 'coordinator')
+        self.parentDriver.send('done_playing', 'coordinator')
 
 
 player = Player()

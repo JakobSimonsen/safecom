@@ -50,6 +50,7 @@ window = sg.Window('Walkie Talkie boj', layout, margins,
 # Event Loop to process "events" and get the "values" of the inputs
 while True:
     event, values = window.read()
+    print("Hello, fack.")
     if event == sg.WIN_CLOSED:  # if user closes window or clicks cancel
         break
 
