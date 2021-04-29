@@ -8,8 +8,17 @@ import wave
 
 
 class Player:
-    def __init__(self):
-        self.stm_driver = 0
+    def __init__(self, parentDriver):
+        self.parentDriver = parentDriver
+
+        t0 = {'source': 'initial', 'target': 'ready'}
+        t1 = {'trigger': 'start', 'source': 'ready', 'target': 'playing'}
+        t2 = {'trigger': 'done', 'source': 'playing', 'target': 'ready', 'effect':'finished_playing'}
+
+
+        s_playing = {'name': 'playing', 'do': 'play()'}
+
+        self.playback_stm = Machine(name='playback_stm', transitions=[t0, t1, t2], states=[s_playing], obj=self)
         pass
 
     def play(self, filename):
@@ -47,15 +56,6 @@ class Player:
         self.parentDriver.send('done_playing', 'coordinator')
 
 
-player = Player()
 
-t0 = {'source': 'initial', 'target': 'ready'}
-t1 = {'trigger': 'start', 'source': 'ready', 'target': 'playing'}
-t2 = {'trigger': 'done', 'source': 'playing', 'target': 'ready', 'effect':'finished_playing'}
-
-
-s_playing = {'name': 'playing', 'do': 'play()'}
-
-playback_stm = Machine(name='playback_stm', transitions=[t0, t1, t2], states=[s_playing], obj=player)
 
 
