@@ -14,6 +14,7 @@ class MQTT_Client:
         self.port = None
         self.driver = driver
         self.client_id = str(uuid.uuid1()) # Creates a client ID
+        
 
 
     def on_connect(self, client, userdata, flags, rc):
