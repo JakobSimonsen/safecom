@@ -48,11 +48,11 @@ class MQTT_Client:
                 elif js_str['last_packet'] == True:
                     # checking if history is larger then 5
                     if(history.size < 5):
-                        history.append(file_name)
+                        self.history.append(file_name)
                     # if history is more then 5 remove first element and add new to history
                     else:
-                        history.pop(0)
-                        history.append(file_name)
+                        self.history.pop(0)
+                        self.history.append(file_name)
                     self.driver.send("play_incoming_message", 'coordinator', [filename])
                 
                 # Append to correct audio file
