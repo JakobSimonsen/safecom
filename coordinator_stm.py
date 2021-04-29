@@ -123,10 +123,6 @@ t10 = {'trigger': 'sending_success',
        'source': 'sending',
        'target': 'idle'}
 
-t11 = {'trigger': 'fileSaved',
-       'source': 'saving_file',
-       'target': 'sending'}
-
 
 idle = {'name': 'idle', 'change_channel': 'set_new_channel(*)'}
 
@@ -147,7 +143,7 @@ playing = {'name': 'playing',
            'entry': 'start_timer("t1", 10000); play_msg',
            'new_incoming_msg': 'defer'}
 
-machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11], obj=coordinator, states=[
+machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10], obj=coordinator, states=[
                   idle, recording, saving_file, playing, sending])
 coordinator.stm = machine
 
@@ -167,14 +163,13 @@ coordinator.stm_driver = driver
 playback.player.stm_driver = driver
 
 #Just used to test the coordination between recorder.py, mqtt_client.py and coordinator atm -Toni
-"""
+'''
 driver.send("record_button", "coordinator")
 coordinator.channel = "team2"
 time.sleep(3)
 print("Sending end_recording_button trigger")
 driver.send("end_recording_button", "coordinator")
-"""
-
+'''
 
 
 
