@@ -132,7 +132,6 @@ idle = {'name': 'idle', 'change_channel': 'set_new_channel(*)'}
 
 recording = {'name': 'recording',
              'entry': 'start_recording; start_timer("t3", 180000); ',
-
              'new_incoming_msg': 'defer'}
 
 saving_file = {'name': 'saving_file',
