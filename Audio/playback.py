@@ -16,13 +16,13 @@ class Player:
         t2 = {'trigger': 'done', 'source': 'playing', 'target': 'ready', 'effect':'finished_playing'}
 
 
-        s_playing = {'name': 'playing', 'do': 'play()'}
+        s_playing = {'name': 'playing', 'do': 'play(*)'}
 
         self.playback_stm = Machine(name='playback_stm', transitions=[t0, t1, t2], states=[s_playing], obj=self)
         pass
 
     def play(self, filename):
-
+        print("Inside playback, playing "+filename)
         # Set chunk size of 1024 samples per data frame
         chunk = 1024
 

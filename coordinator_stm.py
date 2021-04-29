@@ -32,10 +32,10 @@ class Coordinator:
         self.stm_driver.send("stop", "recorder_stm")
 
     def play_msg(self, filename):
-        print("playing message")
+        print("playing message w. "+filename)
 
         self.stm_driver.send("start", "playback_stm", [filename])
-        self.stm_driver.send("done", "playback_stm")
+        #self.stm_driver.send("done", "playback_stm")
 
     def send_msg(self, fileName):
         self.client.publish_recorded_message(self.channel, self.priority, fileName)

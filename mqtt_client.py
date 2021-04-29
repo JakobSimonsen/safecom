@@ -19,6 +19,7 @@ class MQTT_Client:
         print('on_connect(): {}'.format(mqtt.connack_string(rc)))
 
     def on_message(self, client, userdata, msg):
+        print("In onMessage")
         #print('on_message(): topic: {}'.format(msg.topic))
         #
         # data['seq_number'] --> int
