@@ -55,6 +55,6 @@ t2 = {'trigger': 'done', 'source': 'playing', 'target': 'ready', 'effect':'finis
 
 s_playing = {'name': 'playing', 'do': 'play()'}
 
-playback_stm = Machine(name='playback_stm', transitions=[t0, t1, t2, t3], states=[s_playing], obj=player)
+playback_stm = Machine(name='playback_stm', transitions=[t0, t1, t2], states=[s_playing], obj=player)
 
 
