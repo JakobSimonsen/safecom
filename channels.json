@@ -1,1 +1,1 @@
-{"channel1": "Channel 1", "channel2": "Channel 2", "channel3": "Channel 3"}
+{"channel1": {"name": "Channel 1", "topic": "team2/channel1"}, "channel2": {"name": "Channel 2", "topic": "team2/channel2"}, "channel3": {"name": "Channel 3", "topic": "team2/channel3"}}

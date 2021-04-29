@@ -6,7 +6,7 @@ from datetime import datetime
 import pyaudio
 import wave
 # test
-from mqtt_client import MQTT_Client
+#from mqtt_client import MQTT_Client
 
 class Recorder:
     def __init__(self, parentDriver):
@@ -53,7 +53,7 @@ class Recorder:
         stream.stop_stream()
         stream.close()
         # Terminate the PortAudio interface
-        self.p.terminate()
+        #self.p.terminate() Had to remove, but it's ok since it looks like it terminates automatically when the terminal closes.
 
     def stop(self):
         print("stop")
@@ -70,7 +70,8 @@ class Recorder:
         wf.writeframes(b''.join(self.frames))
         wf.close()
         #Could put this in separate state, but works here for now
-        #self.parentDriver.send("fileSaved", "coordinator", [filename])
+        self.parentDriver.send("file_saved", "coordinator", [filename])
+        print("Have sent file_saved method call")
 
 
         # =============
@@ -78,7 +79,7 @@ class Recorder:
         # ============= s
         #self.parentDriver.send("send_button", "coordinator", )
         
-        #client = MQTT_Client()
+        #client = MQTT_Client(self.parentDriver)
 
         #client.start('mqtt.item.ntnu.no', 1883, "team2/audio_test")
         #client.publish_recorded_message("team2/audio_test", 1, str(filename))
