@@ -148,6 +148,7 @@ class MQTT_Client:
                 self.driver.send('sending_failed', 'coordinator', [filename])
                 break
         else:
+            print("Sending sending_success to coordinator")
             self.driver.send('sending_success', 'coordinator')
 
     def GetHistory(self):
