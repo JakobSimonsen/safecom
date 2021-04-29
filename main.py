@@ -38,9 +38,13 @@ layout = [title,
 
 margins = (100, 50)
 
+coordinator_stm.driver.send(
+    "change_channel", "coordinator", args=[channel_values['channel1']['topic']])
+
 # Create the Window
 window = sg.Window('Walkie Talkie boj', layout, margins,
                    text_justification="center", element_justification="center")
+
 
 # Event Loop to process "events" and get the "values" of the inputs
 while True:
@@ -73,6 +77,7 @@ while True:
         print('Play message: ', message_file)
         # Jakobi this is your metode
         # coordinator_stm.driver.send(args=[message_file])
+
 
 coordinator_stm.driver.stop()
 window.close()
