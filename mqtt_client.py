@@ -13,6 +13,7 @@ class MQTT_Client:
         self.broker = None
         self.port = None
         self.driver = driver
+        self.client_id = uuid.uuid1() # Creates a client ID
 
 
     def on_connect(self, client, userdata, flags, rc):
@@ -39,22 +40,23 @@ class MQTT_Client:
 
         try:
             # If new call - create new audio file
-            file_name = f"output_audio_files/{js_str['call_id']}-output.wav"
-            if js_str['seq_number'] == 0:
-                output_file = open(file_name, "wb")
-                output_file.write(byte_array)
-                output_file.close()
-            
-            # play correct audio file
-            elif js_str['last_packet'] == True:
-                playsound(file_name)
-            
-            # Append to correct audio file
-            else:
-                output_file = open(file_name, "ab")
-                output_file.write(byte_array)
-                output_file.close()
+            if js_str['client_id'] != client_id:
+                file_name = f"output_audio_files/{js_str['call_id']}-output.wav"
+                if js_str['seq_number'] == 0:
+                    output_file = open(file_name, "wb")
+                    output_file.write(byte_array)
+                    output_file.close()
                 
+                # play correct audio file
+                elif js_str['last_packet'] == True:
+                    playsound(file_name)
+                
+                # Append to correct audio file
+                else:
+                    output_file = open(file_name, "ab")
+                    output_file.write(byte_array)
+                    output_file.close()
+                    
         except Exception as e:
             print("Exception" + str(e))
 
@@ -119,6 +121,7 @@ class MQTT_Client:
         for i, data_chunk in enumerate(all_data):
             # Current data packet
             data_packet = {}
+            data_packet['client_id'] = self.client_id # Adds client ID to all packets
             data_packet['call_id'] = call_id
             data_packet['seq_number'] = i
             data_packet['priority'] = priority
