@@ -6,7 +6,7 @@ from stmpy import Driver, Machine
 from threading import Thread
 import collections
 import queue
-from playsound import playsound
+import playsound
 
 
 class Coordinator:
