@@ -14,12 +14,13 @@ class MQTT_Client:
         self.port = None
         self.driver = driver
         self.client_id = uuid.uuid1() # Creates a client ID
+        self.history = []
 
 
     def on_connect(self, client, userdata, flags, rc):
         print('on_connect(): {}'.format(mqtt.connack_string(rc)))
 
-   
+
     def on_message(self, client, userdata, msg):
         #print('on_message(): topic: {}'.format(msg.topic))
         #
@@ -28,8 +29,8 @@ class MQTT_Client:
         # data['priority'] --> int
         # data['data'] - decode with b64decode
         # data['last_packet] --> bool
-        
-        
+
+
         # Decode payload into json string
         decoded_string = msg.payload.decode('utf-8')
         js_str = js.loads(decoded_string)
@@ -46,18 +47,24 @@ class MQTT_Client:
                     output_file = open(file_name, "wb")
                     output_file.write(byte_array)
                     output_file.close()
-                
+
                 # play correct audio file
                 elif js_str['last_packet'] == True:
                     playsound(file_name)
-                    
-                
+                    #checking if history is larger then 5
+                    if(history.size < 5):
+                        history.append(file_name)
+                    #if history is more then 5 remove first element and add new to history
+                    else:
+                        history.pop(0)
+                        history.append(file_name)
+
                 # Append to correct audio file
                 else:
                     output_file = open(file_name, "ab")
                     output_file.write(byte_array)
                     output_file.close()
-                    
+
         except Exception as e:
             print("Exception" + str(e))
 
@@ -82,18 +89,18 @@ class MQTT_Client:
         self.client.connect(broker, port)
 
         #self.client.subscribe(subscribe_channel)
-        
+
         try:
             thread = Thread(target=self.client.loop_forever)
             thread.start()
-        
+
         except KeyboardInterrupt:
             pass
             ###print('Interrupted')
             #self.client.disconnect()
-        
+
     def publish_recorded_message(self, topic, priority, filename):
-        
+
         # Turn audio file into bytestream
         audio_file = open(filename, 'rb')
         audio_string = audio_file.read()
@@ -108,13 +115,13 @@ class MQTT_Client:
 
         # add bytestream to the data json object
         all_data = list(encoded_string.decode('ascii'))
-        
+
         # Chunk size of data
         seq_number = 0
         chunk_size = 5000
 
         # Splits data into smaller chunks
-        all_data = [all_data[i:i + chunk_size] for i in range(0, len(all_data), chunk_size)] 
+        all_data = [all_data[i:i + chunk_size] for i in range(0, len(all_data), chunk_size)]
         last_sequene_number = len(all_data)-1
 
         # unique ID for the whole call/audio-file
@@ -127,13 +134,13 @@ class MQTT_Client:
             data_packet['seq_number'] = i
             data_packet['priority'] = priority
             data_packet['last_packet'] = (i == last_sequene_number)
-            
+
             data_packet['data'] = "".join(data_chunk)
             send_data = js.dumps(data_packet)
 
             #publish(topic, payload=None, qos=0, retain=False) - default values
-            result = self.client.publish(topic=topic,payload=send_data,qos=2, retain=False)  
-            
+            result = self.client.publish(topic=topic,payload=send_data,qos=2, retain=False)
+
             # If one of the packets don't work
             if result[0] > 0:
                 # send to state machine that the message failed
@@ -142,8 +149,10 @@ class MQTT_Client:
         else:
             self.driver.send('sending_success', 'coordinator')
 
- 
 
-        
-       
-        
+
+    def GetHistory():
+        return history
+
+
+
