@@ -9,13 +9,10 @@ title_font = ('Arial', 25)
 normal_font = ('Arial', 18)
 sg.theme('DarkBlue4')
 
-p_msg = ['Priority 1', 'Priority 2']
-msg = ["Message 1", "Message 2"]
+msg = coordinator_stm.client.GetHistory()
 
 title = [sg.Text('This is your new awesome walkie talkie', font=title_font)]
 
-priority_message = [sg.Listbox(values=p_msg, size=(
-    30, len(p_msg)), font=normal_font,  enable_events=True, key='priority_message')]
 
 messages = [sg.Listbox(values=msg,
                        size=(30, len(msg)), font=normal_font, enable_events=True, key='message')]
@@ -33,7 +30,6 @@ stop_button = [sg.Button('Stop and Send', size=(25, 1),
 
 # All the stuff inside your window.
 layout = [title,
-          priority_message,
           messages,
           [channels, channel_button],
           priority,
@@ -74,13 +70,9 @@ while True:
 
     elif event == 'message':
         message_file = values['message']
-        print('Play message')
+        print('Play message: ', message_file)
         # Jakobi this is your metode
         # coordinator_stm.driver.send(args=[message_file])
-
-    elif event == 'priority_message':
-        message_file = values['priority_message']
-        print('Play priority message')
 
 coordinator_stm.driver.stop()
 window.close()
