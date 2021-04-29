@@ -8,7 +8,7 @@ with open('./channels.json') as f:
 title_font = ('Arial', 25)
 normal_font = ('Arial', 18)
 sg.theme('DarkBlue4')
-default_channel = channel_values['channel1']['topic']
+default_channel = channel_values['channel1']
 
 msg = coordinator_stm.client.GetHistory()
 
@@ -18,7 +18,7 @@ title = [sg.Text('This is your new awesome walkie talkie', font=title_font)]
 messages = [sg.Listbox(values=msg,
                        size=(30, len(msg)), font=normal_font, enable_events=True, key='message')]
 
-channels = sg.Combo([channel_values[v]['name'] for v in channel_values], default_value=default_channel,
+channels = sg.Combo([channel_values[v]['name'] for v in channel_values], default_value=default_channel['name'],
                     enable_events=True, key='channels', size=(15, 1), font=normal_font)
 channel_button = sg.Button('Update', size=(
     10, 1), key='Update', font=normal_font)
@@ -40,7 +40,7 @@ layout = [title,
 margins = (100, 50)
 
 coordinator_stm.driver.send(
-    "change_channel", "coordinator", args=[default_channel])
+    "change_channel", "coordinator", args=[default_channel['topic']])
 
 # Create the Window
 window = sg.Window('Walkie Talkie boj', layout, margins,
