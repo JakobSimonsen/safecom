@@ -12,8 +12,7 @@ class Player:
         self.stm_driver = 0
         pass
 
-    def play(self):
-        filename = 'output.wav'
+    def play(self, filename):
 
         # Set chunk size of 1024 samples per data frame
         chunk = 1024
@@ -42,13 +41,18 @@ class Player:
         # Close and terminate the stream
         stream.close()
         p.terminate()
+        wf.close()
+    
+    def finished_playing(self):
+        self.driver.send('done_playing', 'coordinator')
 
 
 player = Player()
 
 t0 = {'source': 'initial', 'target': 'ready'}
 t1 = {'trigger': 'start', 'source': 'ready', 'target': 'playing'}
-t2 = {'trigger': 'done', 'source': 'playing', 'target': 'ready'}
+t2 = {'trigger': 'done', 'source': 'playing', 'target': 'ready', 'effect':'finished_playing'}
+
 
 s_playing = {'name': 'playing', 'do': 'play()'}
 

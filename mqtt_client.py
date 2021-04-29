@@ -12,9 +12,9 @@ class MQTT_Client:
         self.broker = None
         self.port = None
         self.driver = driver
-        self.client_id = uuid.uuid1()  # Creates a client ID
+        self.client_id = str(uuid.uuid1())  # Creates a client ID
         self.history = []
-
+        
     def on_connect(self, client, userdata, flags, rc):
         print('on_connect(): {}'.format(mqtt.connack_string(rc)))
 
@@ -46,7 +46,6 @@ class MQTT_Client:
 
                 # play correct audio file
                 elif js_str['last_packet'] == True:
-                    playsound(file_name)
                     # checking if history is larger then 5
                     if(history.size < 5):
                         history.append(file_name)
@@ -54,7 +53,8 @@ class MQTT_Client:
                     else:
                         history.pop(0)
                         history.append(file_name)
-
+                    self.driver.send("play_incoming_message", 'coordinator', [filename])
+                
                 # Append to correct audio file
                 else:
                     output_file = open(file_name, "ab")
