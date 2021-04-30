@@ -55,6 +55,7 @@ class MQTT_Client:
                     else:
                         os.remove(self.history.pop(0))
                         self.history.append(file_name)
+                        print(self.history)
 
                     self.driver.send("play_incoming_message", 'coordinator', [file_name])
 
