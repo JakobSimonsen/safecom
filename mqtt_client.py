@@ -14,8 +14,10 @@ class MQTT_Client:
         self.driver = driver
         self.client_id = str(uuid.uuid1())  # Creates a client ID
         self.history = []
+        self.got_disconnected = False
         
     def on_connect(self, client, userdata, flags, rc):
+        self.got_disconnected = False
         print('on_connect(): {}'.format(mqtt.connack_string(rc)))
 
     def on_message(self, client, userdata, msg):
@@ -80,6 +82,7 @@ class MQTT_Client:
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
+        self.client.on_disconnect = self.on_disconnect
 
         # setting broker and port (self.variables)
         self.broker = broker
@@ -97,6 +100,12 @@ class MQTT_Client:
             pass
             # print('Interrupted')
             # self.client.disconnect()
+    
+    def on_disconnect(self, client, userdata, rc):
+        print("Inside on_disconnect")
+        self.got_disconnected = True
+        #self.driver.send('disconnected', 'coordinator')
+
 
     def publish_recorded_message(self, topic, priority, filename):
 
@@ -139,15 +148,18 @@ class MQTT_Client:
             data_packet['data'] = "".join(data_chunk)
             send_data = js.dumps(data_packet)
 
+            if self.got_disconnected:
+                print("About to send sending_failed")
+                # send to state machine that the message failed
+                self.driver.send('sending_failed', 'coordinator', [filename])
+                break
+
+            print("got_disconnected? "+str(self.got_disconnected))
+
             # publish(topic, payload=None, qos=0, retain=False) - default values
             result = self.client.publish(
                 topic=topic, payload=send_data, qos=2, retain=False)
 
-            # If one of the packets don't work
-            if result[0] > 0:
-                # send to state machine that the message failed
-                self.driver.send('sending_failed', 'coordinator', [filename])
-                break
         else:
             print("Sending sending_success to coordinator")
             self.driver.send('sending_success', 'coordinator')
