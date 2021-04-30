@@ -40,7 +40,9 @@ class MQTT_Client:
         try:
             # If new call - create new audio file
             if js_str['client_id'] != self.client_id:
-                file_name = f"output_audio_files/{js_str['call_id']}-output.wav"
+                
+                #priority_1_filename.wav
+                file_name = f"output_audio_files/priority_{js_str['priority']}_{js_str['call_id']}-output.wav"
                 if js_str['seq_number'] == 0:
                     output_file = open(file_name, "wb")
                     output_file.write(byte_array)
@@ -60,6 +62,7 @@ class MQTT_Client:
                     else:
                         os.remove(self.history.pop(0))
                         self.history.append(file_name)
+                        print(self.history)
 
                     self.driver.send("play_incoming_message",
                                      'coordinator', [file_name])

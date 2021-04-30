@@ -1,5 +1,5 @@
 import time
-
+import re
 from mqtt_client import MQTT_Client
 from Audio import recorder, playback
 from stmpy import Driver, Machine
@@ -14,8 +14,8 @@ class Coordinator:
         self.channel = "team2/channel1"  # None #Bytt ut med å bruke channels.json-objektet
         self.priority = 0
         self.client = None
-        self.high_priority_queue = queue.Queue()
-        self.low_priority_queue = queue.Queue()
+        self.high_priority_queue = []
+        self.low_priority_queue = []
         self.times_retried = 0
 
         # self.voice_msg??
@@ -34,7 +34,20 @@ class Coordinator:
 
     def play_msg(self, filename):
         print("playing message w. "+filename)
-        playsound(filename)
+        regex_priority = "^(priority_1)"
+        z = re.findall(regex_priority, filename)
+        if(z):
+            self.high_priority_queue.append(filename)
+        else:
+            self.low_priority_queue.append(filename)
+
+        if(len(self.high_priority_queue)> 0):
+            for i in self.high_priority_queue:
+                playsound(self.high_priority_queue.pop(0))
+        elif(len(self.low_priority_queue)>0):
+            for i in self.low_priority_queue:
+                playsound(self.low_priority_queue.pop(0))
+
         self.stm_driver.send("done_playing", "coordinator")
         #self.stm_driver.send("start", "playback_stm", [filename])
 
@@ -60,12 +73,12 @@ class Coordinator:
         try:
         # High priority: 1
         if msg_reference[1] == 1:
-            self.high_priority_queue.put(msg_reference) #[filename, priority, topic] 
+            self.high_priority_queue.put(msg_reference) #[filename, priority, topic]
         except:
             print("error adding to high priority queue")
         # Low priority: 0
         if msg_reference[1] == 0:
-            self.low_priority_queue.put(msg_reference) #[filename, priority, topic] 
+            self.low_priority_queue.put(msg_reference) #[filename, priority, topic]
         except:
             print("error adding to low priority queue")
     """
@@ -138,7 +151,11 @@ recording = {'name': 'recording',
              'play_incoming_message': 'defer'}
 
 saving_file = {'name': 'saving_file',
-               'play_incoming_message': 'defer'}
+                'play_incoming_message': 'defer'}
+
+sending = {'name': 'sending',
+            'entry': 'in_sending_state', #'send_msg',
+            'play_incoming_message': 'defer'}
 
 sending = {'name': 'sending',
            'entry': 'in_sending_state',  # 'send_msg',
