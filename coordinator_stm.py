@@ -37,9 +37,9 @@ class Coordinator:
         regex_priority = "^(priority_1)"
         z = re.findall(regex_priority, filename)
         if(z):
-            high_priority_queue.add(filename)
+            self.high_priority_queue.append(filename)
         else:
-            low_priority_queue.add(filename)
+            self.low_priority_queue.append(filename)
 
         if(len(high_priority_queue)> 0):
             for sound_file in high_priority_queue:
