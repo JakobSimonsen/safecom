@@ -17,10 +17,15 @@ class MQTT_Client:
         self.history = []
         self.is_blackbox = False
         self.channel = None
+        self.firstTimeRunning = True
 
     def on_connect(self, client, userdata, flags, rc):
         print('on_connect(): {}'.format(mqtt.connack_string(rc)))
-        #self.client.subscribe(self.channel, 2)
+        if (self.firstTimeRunning):
+            self.firstTimeRunning = False
+        else:
+            print("Subsribed to "+self.channel)
+            self.client.subscribe(self.channel)
 
     def on_message(self, client, userdata, msg):
         #print('on_message(): topic: {}'.format(msg.topic))
