@@ -147,18 +147,18 @@ idle = {'name': 'idle', 'change_channel': 'set_new_channel(*)'}
 
 recording = {'name': 'recording',
              'entry': 'start_recording; start_timer("t3", 180000); ',
-             'new_incoming_msg': 'defer'}
+             'play_incoming_msg': 'defer'}
 
 saving_file = {'name': 'saving_file',
-                'new_incoming_msg': 'defer'}
+                'play_incoming_msg': 'defer'}
 
 sending = {'name': 'sending',
            'entry': 'in_sending_state', #'send_msg',
-           'new_incoming_msg': 'defer',
+           'play_incoming_msg': 'defer',
            'sending_failed': 'add_to_top_of_queue(*)'}
 
 playing = {'name': 'playing',
-           'new_incoming_msg': 'defer'}
+           'play_incoming_msg': 'defer'}
 
 machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t9, t10, t11, t12], obj=coordinator, states=[
                   idle, recording, saving_file, playing, sending])
