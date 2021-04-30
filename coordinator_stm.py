@@ -11,7 +11,7 @@ from playsound import playsound
 
 class Coordinator:
     def __init__(self):
-        self.channel = "team2/channel1"#None #Bytt ut med å bruke channels.json-objektet
+        self.channel = "team2/channel1"  # None #Bytt ut med å bruke channels.json-objektet
         self.priority = 0
         self.client = None
         self.high_priority_queue = []
@@ -22,7 +22,7 @@ class Coordinator:
 
     def start_recording(self):
         print("start_recording called in coordinator")
-        #self.recorder.record()
+        # self.recorder.record()
         self.stm_driver.send("start", "recorder_stm")
 
     def end_recording(self, priority):
@@ -54,7 +54,8 @@ class Coordinator:
         #self.stm_driver.send("done", "playback_stm")
 
     def send_msg(self, fileName):
-        self.client.publish_recorded_message(self.channel, self.priority, fileName)
+        self.client.publish_recorded_message(
+            self.channel, self.priority, fileName)
 
     def set_new_channel(self, new_channel):
         print("setting new channel")
@@ -81,6 +82,7 @@ class Coordinator:
         except:
             print("error adding to low priority queue")
     """
+
     def resend_message(self, filename_in_list):
         time.sleep(0.5)
         self.times_retried += 1
@@ -88,8 +90,6 @@ class Coordinator:
             self.stm_driver.send('sending_success', 'coordinator')
 
         self.send_msg(filename_in_list[0])
-
-
 
 
 coordinator = Coordinator()
@@ -106,7 +106,8 @@ t2 = {'trigger': 'new_incoming_msg',
 
 t3 = {'trigger': 'play_from_history',
       'source': 'idle',
-      'target': 'playing'}
+      'target': 'playing',
+      'effect': 'play_msg(*)'}
 
 t4 = {'trigger': 't3',
       'source': 'recording',
@@ -135,13 +136,13 @@ t10 = {'trigger': 'sending_success',
        'target': 'idle'}
 
 t11 = {'trigger': 'play_incoming_message',
-        'source': 'idle',
-        'effect': 'play_msg(*)',
-        'target': 'playing'}
+       'source': 'idle',
+       'effect': 'play_msg(*)',
+       'target': 'playing'}
 
 t12 = {'trigger': 'done_playing',
-        'source': 'playing',
-        'target': 'idle'}
+       'source': 'playing',
+       'target': 'idle'}
 
 idle = {'name': 'idle', 'change_channel': 'set_new_channel(*)'}
 
@@ -153,7 +154,11 @@ saving_file = {'name': 'saving_file',
                 'play_incoming_message': 'defer'}
 
 sending = {'name': 'sending',
-           'entry': 'in_sending_state', #'send_msg',
+            'entry': 'in_sending_state', #'send_msg',
+            'play_incoming_message': 'defer'}
+
+sending = {'name': 'sending',
+           'entry': 'in_sending_state',  # 'send_msg',
            'play_incoming_message': 'defer',
            'sending_failed': 'add_to_top_of_queue(*)'}
 
@@ -180,7 +185,7 @@ driver.start()
 coordinator.stm_driver = driver
 #playback.player.stm_driver = driver
 
-#Just used to test the coordination between recorder.py, mqtt_client.py and coordinator atm -Toni
+# Just used to test the coordination between recorder.py, mqtt_client.py and coordinator atm -Toni
 '''
 driver.send("record_button", "coordinator")
 coordinator.channel = "team2"
@@ -188,12 +193,6 @@ time.sleep(3)
 print("Sending end_recording_button trigger")
 driver.send("end_recording_button", "coordinator")
 '''
-
-
-
-
-
-
 
 
 # Just used to test the recorder.py atm -Toni
