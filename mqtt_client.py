@@ -76,6 +76,7 @@ class MQTT_Client:
         return self.port
 
     def start(self, broker, port):
+        print("Running start method")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
@@ -109,7 +110,7 @@ class MQTT_Client:
         time.sleep(1)
 
         # establishes connection
-        client_connect = self.client.connect(self.broker, self.port)
+        #client_connect = self.client.connect(self.broker, self.port)
 
         # add bytestream to the data json object
         all_data = list(encoded_string.decode('ascii'))
