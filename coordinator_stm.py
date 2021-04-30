@@ -25,7 +25,7 @@ class Coordinator:
         # self.recorder.record()
         self.stm_driver.send("start", "recorder_stm")
 
-    def end_recording(self, priority):
+    def end_recording(self, priority = 0):
         print("ending recording")
         self.priority = 1 if priority else 0
         # self.recorder.stop()
@@ -85,7 +85,8 @@ t3 = {'trigger': 'play_from_history',
 
 t4 = {'trigger': 't3',
       'source': 'recording',
-      'target': 'saving_file'}
+      'target': 'saving_file',
+      'effect': 'end_recording(*)'}
 
 t5 = {'trigger': 'end_recording_button',
       'source': 'recording',
