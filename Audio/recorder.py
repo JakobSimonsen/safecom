@@ -5,8 +5,6 @@ import time
 from datetime import datetime
 import pyaudio
 import wave
-# test
-#from mqtt_client import MQTT_Client
 
 class Recorder:
     def __init__(self, parentDriver):

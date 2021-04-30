@@ -104,8 +104,6 @@ class MQTT_Client:
         print('Connecting to {}:{}'.format(broker, port))
         self.client.connect(broker, port)
 
-        # self.client.subscribe(subscribe_channel)
-
         try:
             thread = Thread(target=self.client.loop_forever)
             thread.start()
@@ -123,11 +121,6 @@ class MQTT_Client:
         audio_file.close()
         byte_array = bytearray(audio_string)
         encoded_string = base64.b64encode(byte_array)
-
-        time.sleep(1)
-
-        # establishes connection
-        #client_connect = self.client.connect(self.broker, self.port)
 
         # add bytestream to the data json object
         all_data = list(encoded_string.decode('ascii'))
@@ -162,8 +155,8 @@ class MQTT_Client:
 
             # If one of the packets don't work
             if result[0] > 0:
-                # send to state machine that the message failed
-                self.driver.send('sending_failed', 'coordinator', [filename])
+                print("Error sending message. Error code "+str(result[0]))
+                self.driver.send('sending_success', 'coordinator') #In order to get out of the state
                 break
         else:
             self.driver.send('sending_success', 'coordinator')

@@ -69,29 +69,6 @@ class Coordinator:
     def in_sending_state(self):
         print("Now in sending state")
 
-    """
-    def add_to_queue(self, msg_reference):
-        try:
-        # High priority: 1
-        if msg_reference[1] == 1:
-            self.high_priority_queue.put(msg_reference) #[filename, priority, topic]
-        except:
-            print("error adding to high priority queue")
-        # Low priority: 0
-        if msg_reference[1] == 0:
-            self.low_priority_queue.put(msg_reference) #[filename, priority, topic]
-        except:
-            print("error adding to low priority queue")
-    """
-
-    def resend_message(self, filename_in_list):
-        time.sleep(0.5)
-        self.times_retried += 1
-        if self.times_retried > 100:
-            self.stm_driver.send('sending_success', 'coordinator')
-
-        self.send_msg(filename_in_list[0])
-
 
 coordinator = Coordinator()
 t0 = {'source': 'initial',
@@ -100,10 +77,6 @@ t0 = {'source': 'initial',
 t1 = {'trigger': 'record_button',
       'source': 'idle',
       'target': 'recording'}
-
-t2 = {'trigger': 'new_incoming_msg',
-      'source': 'idle',
-      'target': 'playing'}
 
 t3 = {'trigger': 'play_from_history',
       'source': 'idle',
@@ -123,14 +96,6 @@ t6 = {'trigger': 'file_saved',
       'source': 'saving_file',
       'effect': 'send_msg(*)',
       'target': 'sending'}
-
-t7 = {'trigger': 't1',
-      'source': 'playing',
-      'target': 'idle'}
-
-t9 = {'trigger': 'sending_failed',
-      'source': 'sending',
-      'target': 'saving_file'}
 
 t10 = {'trigger': 'sending_success',
        'source': 'sending',
@@ -155,17 +120,13 @@ saving_file = {'name': 'saving_file',
                 'play_incoming_message': 'defer'}
 
 sending = {'name': 'sending',
-            'entry': 'in_sending_state', #'send_msg',
+            'entry': 'in_sending_state',
             'play_incoming_message': 'defer'}
-
-sending = {'name': 'sending',
-           'entry': 'in_sending_state',  # 'send_msg',
-           'play_incoming_message': 'defer'}
 
 playing = {'name': 'playing',
            'play_incoming_message': 'defer'}
 
-machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t9, t10, t11, t12], obj=coordinator, states=[
+machine = Machine(name='coordinator', transitions=[t0, t1, t3, t4, t5, t6, t10, t11, t12], obj=coordinator, states=[
                   idle, recording, saving_file, playing, sending])
 coordinator.stm = machine
 
