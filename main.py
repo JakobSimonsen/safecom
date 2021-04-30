@@ -16,7 +16,7 @@ title = [sg.Text('This is your new awesome walkie talkie', font=title_font)]
 
 
 messages = [sg.Listbox(values=msg,
-                       size=(30, len(msg)), font=normal_font, enable_events=True, key='message')]
+                       size=(30, 6), font=normal_font, enable_events=True, key='message')]
 
 channels = sg.Combo([channel_values[v]['name'] for v in channel_values], default_value=default_channel['name'],
                     enable_events=True, key='channels', size=(15, 1), font=normal_font)
@@ -49,8 +49,7 @@ window = sg.Window('Walkie Talkie boj', layout, margins,
 
 # Event Loop to process "events" and get the "values" of the inputs
 while True:
-    event, values = window.read()
-    print("Hello, fack.")
+    event, values = window.read(timeout=10)
     if event == sg.WIN_CLOSED:  # if user closes window or clicks cancel
         break
 
@@ -79,7 +78,7 @@ while True:
         print('Play message: ', message_file)
         # Jakobi this is your metode
         # coordinator_stm.driver.send(args=[message_file])
-
+    window['message'].Update(values=coordinator_stm.client.GetHistory())
 
 coordinator_stm.driver.stop()
 window.close()
