@@ -14,8 +14,8 @@ class Coordinator:
         self.channel = "team2/channel1"#None #Bytt ut med å bruke channels.json-objektet
         self.priority = 0
         self.client = None
-        self.high_priority_queue = queue.Queue()
-        self.low_priority_queue = queue.Queue()
+        self.high_priority_queue = []
+        self.low_priority_queue = []
         self.times_retried = 0
 
         # self.voice_msg??
@@ -37,16 +37,16 @@ class Coordinator:
         regex_priority = "^(priority_1)"
         z = re.findall(regex_priority, filename)
         if(z):
-            self.high_priority_queue.put(filename)
+            self.high_priority_queue.append(filename)
         else:
-            self.low_priority_queue.put(filename)
+            self.low_priority_queue.append(filename)
 
-        if(self.high_priority_queue.qsize()> 0):
+        if(len(self.high_priority_queue)> 0):
             for i in self.high_priority_queue:
-                playsound(self.high_priority_queue.get())
-        elif(self.low_priority_queue.qsize()>0):
+                playsound(self.high_priority_queue.pop(0))
+        elif(len(self.low_priority_queue)>0):
             for i in self.low_priority_queue:
-                playsound(self.low_priority_queue.get())
+                playsound(self.low_priority_queue.pop(0))
 
         self.stm_driver.send("done_playing", "coordinator")
         #self.stm_driver.send("start", "playback_stm", [filename])
