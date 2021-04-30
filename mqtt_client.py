@@ -25,7 +25,7 @@ class MQTT_Client:
             self.firstTimeRunning = False
         else:
             print("Subsribed to "+self.channel)
-            self.client.subscribe(self.channel)
+            self.client.subscribe(self.channel,2)
 
     def on_message(self, client, userdata, msg):
         #print('on_message(): topic: {}'.format(msg.topic))
