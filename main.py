@@ -76,8 +76,9 @@ while True:
     elif event == 'message':
         message_file = values['message']
         print('Play message: ', message_file)
-        # Jakobi this is your metode
-        # coordinator_stm.driver.send(args=[message_file])
+        coordinator_stm.driver.send(
+            'play_from_history', 'coordinator', args=[message_file[0]])
+
     window['message'].Update(values=coordinator_stm.client.GetHistory())
 
 coordinator_stm.driver.stop()
