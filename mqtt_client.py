@@ -76,6 +76,7 @@ class MQTT_Client:
         return self.port
 
     def start(self, broker, port):
+        print("Running start method")
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
@@ -148,6 +149,7 @@ class MQTT_Client:
                 self.driver.send('sending_failed', 'coordinator', [filename])
                 break
         else:
+            print("Sending sending_success to coordinator")
             self.driver.send('sending_success', 'coordinator')
 
     def GetHistory(self):

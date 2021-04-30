@@ -41,6 +41,7 @@ class Coordinator:
         #self.stm_driver.send("done", "playback_stm")
 
     def send_msg(self, fileName):
+        print("Was in send_msg")
         self.client.publish_recorded_message(self.channel, self.priority, fileName)
 
     def set_new_channel(self, new_channel):
@@ -53,6 +54,18 @@ class Coordinator:
 
     def in_sending_state(self):
         print("Now in sending state")
+
+    def in_idle_state(self):
+        print("Now in idle state")
+    
+    def in_recording_state(self):
+        print("Now in recording state")
+
+    def in_saving_file_state(self):
+        print("Now in saving_file state")
+    
+    def in_playing_state(self):
+        print("Now in playing state")
 
     """
     def add_to_queue(self, msg_reference):
@@ -144,13 +157,14 @@ t12 = {'trigger': 'done_playing',
         'source': 'playing',
         'target': 'idle'}
 
-idle = {'name': 'idle', 'change_channel': 'set_new_channel(*)'}
+idle = {'name': 'idle', 'change_channel': 'set_new_channel(*)', 'entry': 'in_idle_state',}
 
 recording = {'name': 'recording',
-             'entry': 'start_recording; start_timer("t3", 180000); ',
+             'entry': 'start_recording; start_timer("t3", 180000); in_recording_state',
              'new_incoming_msg': 'defer'}
 
 saving_file = {'name': 'saving_file',
+                'entry': 'in_saving_file_state',
                 'new_incoming_msg': 'defer'}
 
 sending = {'name': 'sending',
@@ -159,6 +173,7 @@ sending = {'name': 'sending',
            'sending_failed': 'resend_message'}
 
 playing = {'name': 'playing',
+            'entry': 'in_playing_state',
            'new_incoming_msg': 'defer'}
 
 machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t10, t11, t12], obj=coordinator, states=[
