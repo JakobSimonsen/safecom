@@ -35,7 +35,7 @@ class Coordinator:
     def play_msg(self, filename):
         print("playing message w. "+filename)
         regex_priority = "^(priority_1)"
-        z = re.match(regex_priority, filename)
+        z = re.findall(regex_priority, filename)
         if(z):
             high_priority_queue.add(filename)
         else:
