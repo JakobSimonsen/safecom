@@ -1,4 +1,5 @@
 from threading import Thread
+import os
 import paho.mqtt.client as mqtt
 import json as js
 import base64
@@ -14,7 +15,7 @@ class MQTT_Client:
         self.driver = driver
         self.client_id = str(uuid.uuid1())  # Creates a client ID
         self.history = []
-        
+
     def on_connect(self, client, userdata, flags, rc):
         print('on_connect(): {}'.format(mqtt.connack_string(rc)))
 
@@ -52,10 +53,11 @@ class MQTT_Client:
                         self.history.append(file_name)
                     # if history is more then 5 remove first element and add new to history
                     else:
-                        self.history.pop(0)
+                        os.remove(self.history.pop(0))
                         self.history.append(file_name)
+
                     self.driver.send("play_incoming_message", 'coordinator', [file_name])
-                
+
                 # Append to correct audio file
                 else:
                     output_file = open(file_name, "ab")
