@@ -51,7 +51,7 @@ class MQTT_Client:
                 elif js_str['last_packet'] == True:
                     
                     # if blackbox append to history no matter what
-                    if self.blackbox:
+                    if self.is_blackbox:
                         self.history.append((file_name))
                     
                     # checking if history is larger then 5
