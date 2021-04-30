@@ -59,10 +59,11 @@ class Coordinator:
 
     def set_new_channel(self, new_channel):
         print("setting new channel")
+        self.client.channel = new_channel
         if (self.channel != None):
             self.client.client.unsubscribe(self.channel)
         self.channel = new_channel
-        self.client.client.subscribe(new_channel)
+        self.client.client.subscribe(new_channel,2)
         print("subscribed to", new_channel)
 
     def in_sending_state(self):
@@ -159,8 +160,7 @@ sending = {'name': 'sending',
 
 sending = {'name': 'sending',
            'entry': 'in_sending_state',  # 'send_msg',
-           'play_incoming_message': 'defer',
-           'sending_failed': 'add_to_top_of_queue(*)'}
+           'play_incoming_message': 'defer'}
 
 playing = {'name': 'playing',
            'play_incoming_message': 'defer'}

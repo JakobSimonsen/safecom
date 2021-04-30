@@ -16,9 +16,11 @@ class MQTT_Client:
         self.client_id = str(uuid.uuid1())  # Creates a client ID
         self.history = []
         self.is_blackbox = False
+        self.channel = None
 
     def on_connect(self, client, userdata, flags, rc):
         print('on_connect(): {}'.format(mqtt.connack_string(rc)))
+        #self.client.subscribe(self.channel, 2)
 
     def on_message(self, client, userdata, msg):
         #print('on_message(): topic: {}'.format(msg.topic))
