@@ -1,5 +1,5 @@
 import time
-
+import re
 from mqtt_client import MQTT_Client
 from Audio import recorder, playback
 from stmpy import Driver, Machine
@@ -34,10 +34,23 @@ class Coordinator:
 
     def play_msg(self, filename):
         print("playing message w. "+filename)
-        playsound(filename)
+        regex_priority = "^(priority_1)"
+        z = re.match(regex_priority, filename)
+        if(z):
+            high_priority_queue.add(filename)
+        else:
+            low_priority_queue.add(filename)
+
+        if(len(high_priority_queue)> 0):
+            for sound_file in high_priority_queue:
+                playsound(sound_file)
+        elif(len(low_priority_queue)>0):
+            for sound_file in low_priority_queue:
+                playsound(sound_file)
+
         self.stm_driver.send("done_playing", "coordinator")
         #self.stm_driver.send("start", "playback_stm", [filename])
-        
+
         #self.stm_driver.send("done", "playback_stm")
 
     def send_msg(self, fileName):
@@ -59,12 +72,12 @@ class Coordinator:
         try:
         # High priority: 1
         if msg_reference[1] == 1:
-            self.high_priority_queue.put(msg_reference) #[filename, priority, topic] 
+            self.high_priority_queue.put(msg_reference) #[filename, priority, topic]
         except:
             print("error adding to high priority queue")
         # Low priority: 0
         if msg_reference[1] == 0:
-            self.low_priority_queue.put(msg_reference) #[filename, priority, topic] 
+            self.low_priority_queue.put(msg_reference) #[filename, priority, topic]
         except:
             print("error adding to low priority queue")
     """
@@ -76,7 +89,7 @@ class Coordinator:
 
         self.send_msg(filename_in_list[0])
 
-          
+
 
 
 coordinator = Coordinator()
@@ -116,7 +129,7 @@ t7 = {'trigger': 't1',
 t9 = {'trigger': 'sending_failed',
       'source': 'sending',
       'target': 'saving_file'}
-      
+
 t10 = {'trigger': 'sending_success',
        'source': 'sending',
        'target': 'idle'}
