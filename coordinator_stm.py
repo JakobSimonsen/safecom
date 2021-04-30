@@ -41,7 +41,7 @@ class Coordinator:
         else:
             self.low_priority_queue.put(filename)
 
-        if(self.high_priority_queueq.qsize()> 0):
+        if(self.high_priority_queue.qsize()> 0):
             for i in self.high_priority_queue:
                 playsound(self.high_priority_queue.get())
         elif(self.low_priority_queueq.qsize()>0):
