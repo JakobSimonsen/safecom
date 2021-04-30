@@ -41,12 +41,12 @@ class Coordinator:
         else:
             self.low_priority_queue.put(filename)
 
-        if(len(high_priority_queue)> 0):
-            for i in high_priority_queue:
-                playsound(high_priority_queue.get())
-        elif(len(low_priority_queue)>0):
-            for i in low_priority_queue:
-                playsound(low_priority_queue.get())
+        if(len(self.high_priority_queue)> 0):
+            for i in self.high_priority_queue:
+                playsound(self.high_priority_queue.get())
+        elif(len(self.low_priority_queue)>0):
+            for i in self.low_priority_queue:
+                playsound(self.low_priority_queue.get())
 
         self.stm_driver.send("done_playing", "coordinator")
         #self.stm_driver.send("start", "playback_stm", [filename])
