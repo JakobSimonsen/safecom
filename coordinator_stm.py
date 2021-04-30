@@ -37,16 +37,16 @@ class Coordinator:
         regex_priority = "^(priority_1)"
         z = re.findall(regex_priority, filename)
         if(z):
-            self.high_priority_queue.append(filename)
+            self.high_priority_queue.put(filename)
         else:
-            self.low_priority_queue.append(filename)
+            self.low_priority_queue.put(filename)
 
         if(len(high_priority_queue)> 0):
-            for sound_file in high_priority_queue:
-                playsound(sound_file)
+            for i in high_priority_queue:
+                playsound(high_priority_queue.get())
         elif(len(low_priority_queue)>0):
-            for sound_file in low_priority_queue:
-                playsound(sound_file)
+            for i in low_priority_queue:
+                playsound(low_priority_queue.get())
 
         self.stm_driver.send("done_playing", "coordinator")
         #self.stm_driver.send("start", "playback_stm", [filename])
