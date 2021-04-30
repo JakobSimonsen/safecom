@@ -68,13 +68,25 @@ class Coordinator:
         except:
             print("error adding to low priority queue")
     """
-    def resend_message(self, filename_in_list):
+    def resend_message(self, filename):
+        print("Inside resend_message")
         time.sleep(0.5)
         self.times_retried += 1
         if self.times_retried > 100:
+            print("Done trying to resend")
             self.stm_driver.send('sending_success', 'coordinator')
 
-        self.send_msg(filename_in_list[0])
+        self.send_msg(filename)
+
+    def resend_message(self):
+        print("Inside resend_message")
+        time.sleep(0.5)
+        self.times_retried += 1
+        if self.times_retried > 100:
+            print("Done trying to resend")
+            self.stm_driver.send('sending_success', 'coordinator')
+
+        self.send_msg(filename)
 
           
 
@@ -113,9 +125,11 @@ t7 = {'trigger': 't1',
       'source': 'playing',
       'target': 'idle'}
 
+'''
 t9 = {'trigger': 'sending_failed',
       'source': 'sending',
       'target': 'saving_file'}
+'''
       
 t10 = {'trigger': 'sending_success',
        'source': 'sending',
@@ -140,14 +154,14 @@ saving_file = {'name': 'saving_file',
                 'new_incoming_msg': 'defer'}
 
 sending = {'name': 'sending',
-           'entry': 'in_sending_state', #'send_msg',
+           'entry': 'in_sending_state',
            'new_incoming_msg': 'defer',
-           'sending_failed': 'add_to_top_of_queue(*)'}
+           'sending_failed': 'resend_message'}
 
 playing = {'name': 'playing',
            'new_incoming_msg': 'defer'}
 
-machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t9, t10, t11, t12], obj=coordinator, states=[
+machine = Machine(name='coordinator', transitions=[t0, t1, t2, t3, t4, t5, t6, t7, t10, t11, t12], obj=coordinator, states=[
                   idle, recording, saving_file, playing, sending])
 coordinator.stm = machine
 
