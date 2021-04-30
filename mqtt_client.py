@@ -15,6 +15,7 @@ class MQTT_Client:
         self.driver = driver
         self.client_id = str(uuid.uuid1())  # Creates a client ID
         self.history = []
+        self.is_blackbox = False
 
     def on_connect(self, client, userdata, flags, rc):
         print('on_connect(): {}'.format(mqtt.connack_string(rc)))
@@ -48,8 +49,13 @@ class MQTT_Client:
 
                 # play correct audio file
                 elif js_str['last_packet'] == True:
+                    
+                    # if blackbox append to history no matter what
+                    if self.blackbox:
+                        self.history.append((file_name))
+                    
                     # checking if history is larger then 5
-                    if(len(self.history) < 5):
+                    elif(len(self.history) < 5):
                         self.history.append(file_name)
                     # if history is more then 5 remove first element and add new to history
                     else:
