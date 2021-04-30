@@ -1,11 +1,6 @@
-import time
 import re
 from mqtt_client import MQTT_Client
-from Audio import recorder, playback
 from stmpy import Driver, Machine
-from threading import Thread
-import collections
-import queue
 from playsound import playsound
 
 
@@ -132,18 +127,9 @@ coordinator.stm = machine
 
 driver = Driver()
 driver.add_machine(machine)
-
-recorderInstance = recorder.Recorder(driver)
-playbackInstance = playback.Player(driver)
 client = MQTT_Client(driver)
-coordinator.client = client
-coordinator.client.stm_driver = driver
-client.start('mqtt.item.ntnu.no', 1883)
 
-driver.add_machine(recorderInstance.stm)
-driver.add_machine(playbackInstance.playback_stm)
-driver.start()
-coordinator.stm_driver = driver
+
 #playback.player.stm_driver = driver
 
 # Just used to test the coordination between recorder.py, mqtt_client.py and coordinator atm -Toni

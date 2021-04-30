@@ -71,8 +71,8 @@ class MQTT_Client:
                         self.history.append(file_name)
                         print(self.history)
 
-                    self.driver.send("play_incoming_message",
-                                     'coordinator', [file_name])
+                    if not self.is_blackbox:
+                        self.driver.send("play_incoming_message", 'coordinator', [file_name])
 
                 # Append to correct audio file
                 else:

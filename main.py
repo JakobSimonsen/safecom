@@ -1,6 +1,16 @@
 import PySimpleGUI as sg
 import json
 import coordinator_stm
+from Audio import recorder
+
+#setup of statemachine and mqttClient for communication devices
+recorderInstance = recorder.Recorder(coordinator_stm.driver)
+coordinator_stm.coordinator.client = coordinator_stm.client
+coordinator_stm.coordinator.client.stm_driver = coordinator_stm.driver
+coordinator_stm.client.start('mqtt.item.ntnu.no', 1883)
+coordinator_stm.driver.add_machine(recorderInstance.stm)
+coordinator_stm.driver.start()
+coordinator_stm.coordinator.stm_driver = coordinator_stm.driver
 
 with open('./channels.json') as f:
     channel_values = json.load(f)
