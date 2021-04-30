@@ -111,7 +111,7 @@ class MQTT_Client:
         time.sleep(1)
 
         # establishes connection
-        client_connect = self.client.connect(self.broker, self.port)
+        #client_connect = self.client.connect(self.broker, self.port)
 
         # add bytestream to the data json object
         all_data = list(encoded_string.decode('ascii'))
