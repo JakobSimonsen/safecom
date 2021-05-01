@@ -6,10 +6,11 @@ import base64
 import uuid
 import time
 from playsound import playsound
+import re
 
 
 class MQTT_Client:
-    def __init__(self, driver):
+    def __init__(self, driver, coordinator):
         self.broker = None
         self.port = None
         self.driver = driver
@@ -18,6 +19,7 @@ class MQTT_Client:
         self.is_blackbox = False
         self.channel = None
         self.firstTimeRunning = True
+        self.coordinator = coordinator
 
     def on_connect(self, client, userdata, flags, rc):
         print('on_connect(): {}'.format(mqtt.connack_string(rc)))
@@ -47,7 +49,7 @@ class MQTT_Client:
         try:
             # If new call - create new audio file
             if js_str['client_id'] != self.client_id:
-                
+
                 #priority_1_filename.wav
                 file_name = f"output_audio_files/priority_{js_str['priority']}_{js_str['call_id']}-output.wav"
                 if js_str['seq_number'] == 0:
@@ -57,6 +59,14 @@ class MQTT_Client:
 
                 # play correct audio file
                 elif js_str['last_packet'] == True:
+
+
+                    regex_priority = "^(output_audio_files/priority_1)"
+                    z = re.findall(regex_priority, file_name)
+                    if(z):
+                        self.coordinator.high_priority_queue.append(file_name)
+                    else:
+                        self.coordinator.low_priority_queue.append(file_name)
 
                     # if blackbox append to history no matter what
                     if self.is_blackbox:
