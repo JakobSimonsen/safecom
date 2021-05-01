@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
+import re
 import json
 import coordinator_stm
-
 with open('./channels.json') as f:
     channel_values = json.load(f)
 
@@ -9,6 +9,17 @@ title_font = ('Arial', 25)
 normal_font = ('Arial', 18)
 sg.theme('DarkBlue4')
 default_channel = channel_values['channel1']
+
+def LEDIndicator(key=None, radius=30):
+    return sg.Graph(canvas_size=(radius, radius),
+             graph_bottom_left=(-radius, -radius),
+             graph_top_right=(radius, radius),
+             pad=(0, 0), key=key)
+
+def SetLED(window, key, color):
+    graph = window[key]
+    graph.erase()
+    graph.draw_circle((0, 0), 12, fill_color=color, line_color=color)
 
 msg = coordinator_stm.client.GetHistory()
 
@@ -33,7 +44,7 @@ stop_button = [sg.Button('Stop and Send', size=(25, 1),
 layout = [title,
           messages,
           [channels, channel_button],
-          priority,
+          [priority, LEDIndicator('_priority_')],
           record_button,
           stop_button]
 
@@ -76,7 +87,14 @@ while True:
     elif event == 'message':
         message_file = values['message']
         print('Play message: ', message_file)
-        coordinator_stm.driver.send(
+        regex_priority = "^(priority_1)"
+        z = re.findall(regex_priority, message_file[0])
+        if(z):
+            SetLED(window, '_priority_', 'red')
+            coordinator_stm.driver.send(
+            'play_from_history', 'coordinator', args=[message_file[0]])
+        else:
+            coordinator_stm.driver.send(
             'play_from_history', 'coordinator', args=[message_file[0]])
 
     window['message'].Update(values=coordinator_stm.client.GetHistory())
