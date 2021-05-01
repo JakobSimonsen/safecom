@@ -73,6 +73,8 @@ class MQTT_Client:
 
                     if not self.is_blackbox:
                         self.driver.send("play_incoming_message", 'coordinator', [file_name])
+                    else:
+                        print("Saved a voice message as:", file_name)
 
                 # Append to correct audio file
                 else:
