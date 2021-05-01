@@ -38,11 +38,10 @@ class Coordinator:
         """
 
         if(len(self.high_priority_queue)> 0):
-            for i in self.high_priority_queue:
-                playsound(self.high_priority_queue.pop(0))
+            playsound(self.high_priority_queue.pop(0))
         elif(len(self.low_priority_queue)>0):
-            for i in self.low_priority_queue:
-                playsound(self.low_priority_queue.pop(0))
+            playsound(self.low_priority_queue.pop(0))
+
 
         self.stm_driver.send("done_playing", "coordinator")
         #self.stm_driver.send("start", "playback_stm", [filename])
