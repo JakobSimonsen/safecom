@@ -2,3 +2,4 @@ stmpy==0.7.5
 paho-mqtt==1.5.1
 PyAudio==0.2.11
 PySimpleGUI==4.39.1
+playsound==1.2.2
