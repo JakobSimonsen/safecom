@@ -1,4 +1,3 @@
-import re
 from mqtt_client import MQTT_Client
 from stmpy import Driver, Machine
 from playsound import playsound
@@ -29,12 +28,14 @@ class Coordinator:
 
     def play_msg(self, filename):
         print("playing message w. "+filename)
-        regex_priority = "^(priority_1)"
-        z = re.findall(regex_priority, filename)
-        if(z):
-            self.high_priority_queue.append(filename)
-        else:
-            self.low_priority_queue.append(filename)
+
+
+
+        """
+        Appen spiller av en lydfil
+        Får inn low priority message
+        Får inn high priority message
+        """
 
         if(len(self.high_priority_queue)> 0):
             for i in self.high_priority_queue:
@@ -128,7 +129,7 @@ coordinator.stm = machine
 
 driver = Driver()
 driver.add_machine(machine)
-client = MQTT_Client(driver)
+client = MQTT_Client(driver, coordinator)
 
 
 #playback.player.stm_driver = driver

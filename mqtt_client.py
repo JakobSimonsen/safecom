@@ -6,10 +6,11 @@ import base64
 import uuid
 import time
 from playsound import playsound
+import re
 
 
 class MQTT_Client:
-    def __init__(self, driver):
+    def __init__(self, driver, coordinator):
         self.broker = None
         self.port = None
         self.driver = driver
@@ -18,6 +19,7 @@ class MQTT_Client:
         self.is_blackbox = False
         self.channel = None
         self.firstTimeRunning = True
+        self.coordinator = coordinator
 
     def on_connect(self, client, userdata, flags, rc):
         print('on_connect(): {}'.format(mqtt.connack_string(rc)))
@@ -58,6 +60,14 @@ class MQTT_Client:
                 # play correct audio file
                 elif js_str['last_packet'] == True:
 
+
+                    regex_priority = "^(priority_1)"
+                    z = re.findall(regex_priority, file_name)
+                    if(z):
+                        self.coordinator.high_priority_queue.append(file_name)
+                    else:
+                        self.coordinator.low_priority_queue.append(file_name)                    
+
                     # if blackbox append to history no matter what
                     if self.is_blackbox:
                         self.history.append((file_name))
@@ -76,7 +86,7 @@ class MQTT_Client:
                     else:
                         print("Saved a voice message as:", file_name)
 
-                # Append to correct audio file
+                # Append to correct audio file  
                 else:
                     output_file = open(file_name, "ab")
                     output_file.write(byte_array)
