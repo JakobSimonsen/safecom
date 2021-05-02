@@ -60,7 +60,7 @@ class MQTT_Client:
 
                     # if blackbox append to history no matter what
                     if self.is_blackbox:
-                        self.history.append((file_name))
+                        self.history.append(file_name)
 
                     # checking if history is larger then 5
                     elif(len(self.history) < 5):
