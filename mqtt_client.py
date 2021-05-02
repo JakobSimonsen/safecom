@@ -49,7 +49,7 @@ class MQTT_Client:
         try:
             # If new call - create new audio file
             if js_str['client_id'] != self.client_id:
-                
+
                 #priority_1_filename.wav
                 file_name = f"output_audio_files/priority_{js_str['priority']}_{js_str['call_id']}-output.wav"
                 if js_str['seq_number'] == 0:
@@ -61,12 +61,12 @@ class MQTT_Client:
                 elif js_str['last_packet'] == True:
 
 
-                    regex_priority = "^(priority_1)"
+                    regex_priority = "^(output_audio_files/priority_1)"
                     z = re.findall(regex_priority, file_name)
                     if(z):
                         self.coordinator.high_priority_queue.append(file_name)
                     else:
-                        self.coordinator.low_priority_queue.append(file_name)                    
+                        self.coordinator.low_priority_queue.append(file_name)
 
                     # if blackbox append to history no matter what
                     if self.is_blackbox:
@@ -86,7 +86,7 @@ class MQTT_Client:
                     else:
                         print("Saved a voice message as:", file_name)
 
-                # Append to correct audio file  
+                # Append to correct audio file
                 else:
                     output_file = open(file_name, "ab")
                     output_file.write(byte_array)
